@@ -1,32 +1,58 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+  <div>
+    <!-- <router-link></router-link> -->
+    <!-- <router-link tag="button" @click="toggle" to="/register">注册</router-link> -->
+    <transition mode="out-in" appear enter-active-class="animate__animated animate__zoomInUp">
+      <router-view name="login"></router-view>
+    </transition>
+    <transition mode="out-in" appear enter-active-class="animate__animated animate__zoomInUp">
+      <router-view name="register"></router-view>
+    </transition>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import login from "./views/login";
+// import register from "./views/register";
+export default {
+  data() {
+    return {
+      name: "login",
+    };
+  },
+  methods: {
+    // toggle() {
+    //   this.name = this.name == "login" ? "register" : "login";
+    // },
+  },
+};
+</script>
 
-#nav {
-  padding: 30px;
+<style lang='scss'>
+// .v-enter {
+//   opacity: 0;
+// }
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+// .v-enter-to {
+//   opacity: 1;
+// }
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
+// .v-enter-active {
+//   transition: all 3s;
+// }
+
+// .v-leave {
+//   opacity: 1;
+// }
+
+// .v-leave-to {
+//   opacity: 0;
+// }
+
+// .v-leave-active {
+//   transition: all 3s;
+// }
+// button {
+//   width: 20vw;
+// }
 </style>
