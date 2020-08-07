@@ -6,6 +6,7 @@ import "./assets/css/base.css"
 import './assets/css/base.scss'
 import 'animate.css'
 
+
 Vue.config.productionTip = false
 
 

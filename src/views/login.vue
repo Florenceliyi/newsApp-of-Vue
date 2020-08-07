@@ -9,26 +9,62 @@
     <form action>
       <!-- <input type="text" placeholder="番号？" />
       <input type="password" placeholder="パスワード？" />-->
-      <inputDom :type="'text'" :placeholder="'ユーザー名／番号'"></inputDom>
-      <inputDom :type="'password'" :placeholder="'パスワード'"></inputDom>
+      <inputDom
+        :type="'text'"
+        :placeholder="'ユーザー名／番号'"
+        @inputData="getUserName"
+        :rules="/^[a-zA-Z][a-zA-Z0-9_]{4,* }$/"
+      ></inputDom>
+      <inputDom
+        :type="'password'"
+        :placeholder="'パスワード'"
+        @inputData="getUserPsw"
+        :rules="/^[a-zA-Z]\w{5,* }$/"
+      ></inputDom>
     </form>
-    <div class="loginBtn">
-      <a href="#">ฅ'ω'ฅ♪(ロ)</a>
-      <a href="#/register">ฅ'ω'ฅ♪(登)</a>
-    </div>
+
+    <!-- 提交按钮组件 -->
+    <btn href="#" btnName="ฅ'ω'ฅ♪(ロ)" :userName="objData.userName" :password="objData.password"></btn>
+
+    <a href="#/register" class="register">ฅ'ω'ฅ♪(登)</a>
   </div>
 </template>
 
 <script>
 import inputDom from "../components/inputDom";
+import btn from "../components/sumbitBtn";
+
 export default {
   data() {
     return {
-      // inputVal: "",
+      userData: "",
+      objData: {
+        userName: "",
+        password: "",
+      },
     };
   },
+  props: ["parentData"],
+  methods: {
+    getUserName(userName) {
+      this.objData.userName = userName;
+    },
+    getUserPsw(password) {
+      this.objData.password = password;
+    },
+    //若是父组件发送数据，则调用这里的方法；
+    // getUserData() {
+    //   console.log("拿到了用户名" + this.objData.userName);
+    //   console.log("拿到了密码" + this.objData.password);
+    // },
+    // fn() {
+    //   console.log(this.objData);
+    // },
+  },
+
   components: {
     inputDom,
+    btn,
   },
 };
 </script>
@@ -86,24 +122,21 @@ export default {
       text-align: center;
     }
   }
-  .loginBtn {
-    color: #fff;
+
+  .register {
     position: absolute;
-    bottom: 5vh;
+    bottom: 15vh;
     left: 50%;
     transform: translateX(-50%);
-
-    a {
-      display: inline-block;
-      width: 50vw;
-      height: 8vh;
-      line-height: 8vh;
-      background: #f15620;
-      color: #fff;
-      border-radius: 10px;
-      text-align: center;
-      margin-top: 4vw;
-    }
+    display: inline-block;
+    width: 50vw;
+    height: 8vh;
+    line-height: 8vh;
+    background: #f15620;
+    color: #fff;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 4vw;
   }
 }
 

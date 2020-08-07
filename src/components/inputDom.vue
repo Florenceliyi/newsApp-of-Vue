@@ -4,14 +4,14 @@
       :type="type"
       :placeholder="placeholder"
       v-model="inputVal"
-      @change="test"
-      @input="rollback"
+      :rules="rules"
       :class="[errMsg? 'err': '']"
     />
   </div>
 </template>
 
 <script>
+import { Dialog } from "vant";
 export default {
   data() {
     return {
@@ -19,24 +19,25 @@ export default {
       errMsg: false,
     };
   },
-  props: ["type", "placeholder"],
-  methods: {
-    test() {
-      if (this.type == "text") {
-        if (!/[0-9a-zA-Z]/.test(this.inputval)) {
-          alert("输入有误");
-          this.errMsg = true;
-        }
-      } else if (this.type == "password") {
-        if (!/^[a-zA-Z]\w{5,* }$/.test(this.inputval)) {
-          alert("输入有误");
-          this.errMsg = true;
-        }
+  props: ["type", "placeholder", "rules"],
+  watch: {
+    inputVal() {
+      if (this.rules.test(this.inputVal)) {
+        this.errMsg = true;
+        // console.log(this.userName);
+      } else {
+        this.errMsg = false;
+        // console.log(this.objData.password);
       }
+      this.$emit("inputData", this.inputVal);
     },
-    rollback() {
-      this.errMsg = false;
-    },
+  },
+  methods: {
+    //   getUserData(){
+    //   }
+  },
+  components: {
+    [Dialog.Component.name]: Dialog.Component,
   },
 };
 </script>

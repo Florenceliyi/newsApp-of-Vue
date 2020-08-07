@@ -24,17 +24,48 @@
     <div class="loginBtn">
       <!-- <input type="button" value="ฅ'ω'ฅ♪(ロ)" /> -->
       <transition mode="out-in" enter-active-class="animate__animated animate__slideInUp">
-        <a type="button">ฅ'ω'ฅ♪(登)</a>
+        <!-- 提交按钮组件 -->
+        <btn href="#" btnName="ฅ'ω'ฅ♪(登)"></btn>
+        <!-- <a type="button">ฅ'ω'ฅ♪(登)</a> -->
       </transition>
     </div>
   </div>
 </template>
 
 <script>
-import register from "../components/inputDom";
+import inputDom from "../components/inputDom";
+import btn from "../components/sumbitBtn";
 export default {
   components: {
-    register,
+    inputDom,
+    btn,
+  },
+  methods: {
+    judgeData() {
+      if (this.type == "text") {
+        // if (!/[0-9a-zA-Z]/.test(this.inputVal)) {
+        //   Dialog.alert({
+        //     title: "哟哟哟~",
+        //     message: "用户名有错哦~",
+        //     theme: "round-button",
+        //   }).then(() => {
+        //     // on close
+        //   });
+        //   this.errMsg = true;
+        // }
+      } else if (this.type == "password") {
+        // if (!/^[a-zA-Z]\w{5,* }$/.test(this.inputVal)) {
+        //   Dialog.alert({
+        //     title: "哟哟哟~",
+        //     message: "密码输入有误哦(つω｀)～",
+        //     theme: "round-button",
+        //   }).then(() => {
+        //     // on close
+        //   });
+        //   this.errMsg = true;
+        // }
+      }
+    },
   },
 };
 </script>
