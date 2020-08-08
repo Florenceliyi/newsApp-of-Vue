@@ -17,15 +17,39 @@
       <!-- <input type="text" placeholder="番号？" />
       <input type="text" placeholder="ニックネーム？" />
       <input type="password" placeholder="パスワード？" />-->
-      <inputDom :type="'text'" :placeholder="'番号？'"></inputDom>
-      <inputDom :type="'text'" :placeholder="'ニックネーム'"></inputDom>
-      <inputDom :type="'password'" :placeholder="'パスワード？'"></inputDom>
+      <inputDom
+        :type="'text'"
+        :placeholder="'番号？'"
+        :rules="/[0-9a-zA-Z]/"
+        notAllowed="不合法的用户名"
+        @inputData="getUserName"
+      ></inputDom>
+      <inputDom
+        :type="'text'"
+        :placeholder="'ニックネーム'"
+        :rules="/[0-9a-zA-Z]/"
+        @inputData="getUserNickName"
+      ></inputDom>
+      <inputDom
+        :type="'password'"
+        :placeholder="'パスワード？'"
+        :rules="/^\d{3,}$/"
+        notAllowed="不合法的密码"
+        @inputData="getUserPsw"
+      ></inputDom>
     </form>
     <div class="loginBtn">
       <!-- <input type="button" value="ฅ'ω'ฅ♪(ロ)" /> -->
       <transition mode="out-in" enter-active-class="animate__animated animate__slideInUp">
         <!-- 提交按钮组件 -->
-        <btn href="#" btnName="ฅ'ω'ฅ♪(登)"></btn>
+        <btn
+          href="#"
+          btnName="ฅ'ω'ฅ♪(登)"
+          :userName="objData.userName"
+          :userNickName="objData.userNickName"
+          :password="objData.password"
+          @isClicked="getUserData"
+        ></btn>
         <!-- <a type="button">ฅ'ω'ฅ♪(登)</a> -->
       </transition>
     </div>
@@ -33,6 +57,8 @@
 </template>
 
 <script>
+import Vue from "vue";
+import { Dialog } from "vant";
 import inputDom from "../components/inputDom";
 import btn from "../components/sumbitBtn";
 export default {
@@ -40,31 +66,54 @@ export default {
     inputDom,
     btn,
   },
+  data() {
+    return {
+      objData: {
+        userName: "",
+        userNickName: "",
+        password: "",
+      },
+    };
+  },
   methods: {
-    judgeData() {
-      if (this.type == "text") {
-        // if (!/[0-9a-zA-Z]/.test(this.inputVal)) {
-        //   Dialog.alert({
-        //     title: "哟哟哟~",
-        //     message: "用户名有错哦~",
-        //     theme: "round-button",
-        //   }).then(() => {
-        //     // on close
-        //   });
-        //   this.errMsg = true;
-        // }
-      } else if (this.type == "password") {
-        // if (!/^[a-zA-Z]\w{5,* }$/.test(this.inputVal)) {
-        //   Dialog.alert({
-        //     title: "哟哟哟~",
-        //     message: "密码输入有误哦(つω｀)～",
-        //     theme: "round-button",
-        //   }).then(() => {
-        //     // on close
-        //   });
-        //   this.errMsg = true;
-        // }
-      }
+    getUserName(userName) {
+      this.objData.userName = userName;
+    },
+    getUserPsw(password) {
+      this.objData.password = password;
+    },
+    getUserNickName(userNickName) {
+      this.objData.userNickName = userNickName;
+    },
+    getUserData() {
+      this.$axios({
+        url: Vue.baseURL + "/register",
+        method: "post",
+        data: {
+          username: this.objData.userName,
+          password: this.objData.password,
+          nickname: this.objData.userNickName,
+        },
+      })
+        .then((res) => {
+          if (res.data.message == "注册成功") {
+            Dialog.alert({
+              message: res.data.message,
+              theme: "round-button",
+            }).then(() => {
+              // on close
+            });
+            location.href = "http://192.168.79.61:8081/#/login";
+          } else {
+            Dialog.alert({
+              message: res.data.message,
+              theme: "round-button",
+            }).then(() => {
+              // on close
+            });
+          }
+        })
+        .catch((err) => console.log(err));
     },
   },
 };

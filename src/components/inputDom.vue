@@ -6,12 +6,14 @@
       v-model="inputVal"
       :rules="rules"
       :class="[errMsg? 'err': '']"
+      @change="judge"
     />
   </div>
 </template>
 
 <script>
 import { Dialog } from "vant";
+import loginVue from "../views/login.vue";
 export default {
   data() {
     return {
@@ -19,22 +21,41 @@ export default {
       errMsg: false,
     };
   },
-  props: ["type", "placeholder", "rules"],
+  props: ["type", "placeholder", "rules", "notAllowed"],
   watch: {
     inputVal() {
-      if (this.rules.test(this.inputVal)) {
-        this.errMsg = true;
-        // console.log(this.userName);
-      } else {
+      //若是输入框为空，则恢复样式;
+      if (this.inputVal == "") {
         this.errMsg = false;
-        // console.log(this.objData.password);
       }
       this.$emit("inputData", this.inputVal);
     },
   },
   methods: {
-    //   getUserData(){
-    //   }
+    judge() {
+      //输入框为空时
+      if (this.inputVal == "") {
+        return;
+      }
+      //验证用户输入的正则表达
+      if (this.rules.test(this.inputVal)) {
+        this.errMsg = false;
+        // console.log(this.userName);
+      } else {
+        this.errMsg = true;
+        // console.log(this.objData.password);
+      }
+      //若是验证有误，则弹窗；
+      if (this.errMsg) {
+        Dialog.alert({
+          title: "输错了亿点点~",
+          message: this.notAllowed,
+          theme: "round-button",
+        }).then(() => {
+          // on close
+        });
+      }
+    },
   },
   components: {
     [Dialog.Component.name]: Dialog.Component,

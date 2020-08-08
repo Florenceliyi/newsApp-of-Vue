@@ -1,19 +1,19 @@
 <template id='sumbitBtn'>
   <div class="sumbitBtn">
-    <a :href="href" @click="sendClick">{{btnName}}</a>
+    <a :href="href" @click="sendData">{{btnName}}</a>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["href", "btnName", "userName", "password"],
+  props: ["href", "btnName", "userName", "password", "userNickName"],
   methods: {
-    // sendData() {
-    //   this.$emit("isClicked");
-    // },
-    sendClick() {
-      console.log(this.userName, this.password);
+    sendData() {
+      this.$emit("isClicked");
     },
+    // sendClick() {
+    //   console.log(this.userName, this.password, this.userNickName);
+    // },
   },
 };
 </script>

@@ -13,24 +13,32 @@
         :type="'text'"
         :placeholder="'ユーザー名／番号'"
         @inputData="getUserName"
-        :rules="/^[a-zA-Z][a-zA-Z0-9_]{4,* }$/"
+        :rules="/[0-9a-zA-Z]/"
       ></inputDom>
       <inputDom
         :type="'password'"
         :placeholder="'パスワード'"
         @inputData="getUserPsw"
-        :rules="/^[a-zA-Z]\w{5,* }$/"
+        :rules="/^\d{3,}$/"
       ></inputDom>
     </form>
 
     <!-- 提交按钮组件 -->
-    <btn href="#" btnName="ฅ'ω'ฅ♪(ロ)" :userName="objData.userName" :password="objData.password"></btn>
+    <btn
+      href="#"
+      btnName="ฅ'ω'ฅ♪(ロ)"
+      :userName="objData.userName"
+      :password="objData.password"
+      @isClicked="getUserData"
+    ></btn>
 
     <a href="#/register" class="register">ฅ'ω'ฅ♪(登)</a>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
+import { Dialog } from "vant";
 import inputDom from "../components/inputDom";
 import btn from "../components/sumbitBtn";
 
@@ -53,13 +61,44 @@ export default {
       this.objData.password = password;
     },
     //若是父组件发送数据，则调用这里的方法；
-    // getUserData() {
-    //   console.log("拿到了用户名" + this.objData.userName);
-    //   console.log("拿到了密码" + this.objData.password);
-    // },
-    // fn() {
-    //   console.log(this.objData);
-    // },
+    getUserData() {
+      this.$axios({
+        url: Vue.baseURL + "/login",
+        method: "post",
+        data: {
+          username: this.objData.userName,
+          password: this.objData.password,
+        },
+      })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.message == "登录成功") {
+            Dialog.alert({
+              message: res.data.message,
+              theme: "round-button",
+            }).then(() => {
+              // on close
+            });
+            localStorage.setItem("Authorization", res.data.data.token);
+            console.log(res.data.data.user.id);
+            localStorage.setItem("id", res.data.data.user.id);
+            // console.log(Vue.prototype.$axios.defaults.headers);
+            //将token储存到默认设置的请求头中，再设置拦截，每次发送请求时在拦截函数中比对；
+            // Vue.prototype.$axios.defaults.headers.["Authorization"] =
+            //   res.data.data.token;
+
+            location.href = "http://192.168.79.61:8081/#/mycenter";
+          } else {
+            Dialog.alert({
+              message: res.data.message,
+              theme: "round-button",
+            }).then(() => {
+              // on close
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+    },
   },
 
   components: {

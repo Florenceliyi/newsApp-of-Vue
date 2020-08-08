@@ -9,6 +9,8 @@
       <router-view name="register"></router-view>
     </transition>
     <router-view name="home"></router-view>
+    <router-view name="personCenter"></router-view>
+    <router-view name="personalMsg"></router-view>
   </div>
 </template>
 
