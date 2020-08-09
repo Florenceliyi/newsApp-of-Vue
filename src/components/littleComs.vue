@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="box" @click="sendClick" :data-id="id">
     <div class="title">{{content}}</div>
     <div class="users">
       {{detail}}
@@ -10,7 +10,15 @@
 
 <script>
 export default {
-  props: ["content", "detail"],
+  data() {
+    return {};
+  },
+  props: ["content", "detail", "id"],
+  methods: {
+    sendClick() {
+      this.$emit("sonIsClicked", this.id);
+    },
+  },
 };
 </script>
 

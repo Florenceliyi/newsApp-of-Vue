@@ -80,12 +80,9 @@ export default {
               // on close
             });
             localStorage.setItem("Authorization", res.data.data.token);
-            console.log(res.data.data.user.id);
+
             localStorage.setItem("id", res.data.data.user.id);
             // console.log(Vue.prototype.$axios.defaults.headers);
-            //将token储存到默认设置的请求头中，再设置拦截，每次发送请求时在拦截函数中比对；
-            // Vue.prototype.$axios.defaults.headers.["Authorization"] =
-            //   res.data.data.token;
 
             location.href = "http://192.168.79.61:8081/#/mycenter";
           } else {

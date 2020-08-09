@@ -26,6 +26,7 @@ Vue.prototype.$axios.interceptors.request.use(function (config) {
   //config中保存了每次请求的各种具体信息，url，data，method等参数；
 
   console.log(config);
+  // console.log(config.url);
   //若是没有token值，踢回登录页；
   config.headers.Authorization = localStorage.getItem("Authorization")
   //储存token的值；
