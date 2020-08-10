@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import { Dialog } from "vant";
 import loginVue from "../views/login.vue";
 export default {
   data() {
@@ -47,19 +46,19 @@ export default {
       }
       //若是验证有误，则弹窗；
       if (this.errMsg) {
-        Dialog.alert({
-          title: "输错了亿点点~",
-          message: this.notAllowed,
-          theme: "round-button",
-        }).then(() => {
-          // on close
-        });
+        this.$dialog
+          .alert({
+            title: "输错了亿点点~",
+            message: this.notAllowed,
+            theme: "round-button",
+          })
+          .then(() => {
+            // on close
+          });
       }
     },
   },
-  components: {
-    [Dialog.Component.name]: Dialog.Component,
-  },
+  components: {},
 };
 </script>
 

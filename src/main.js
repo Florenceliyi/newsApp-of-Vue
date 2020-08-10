@@ -6,45 +6,106 @@ import "./assets/css/base.css"
 import './assets/css/base.scss'
 import 'animate.css'
 import axios from 'axios'
+
+import Vant from 'vant';
+import 'vant/lib/index.css';
 import {
   Dialog
-} from "vant";
-// import VueAxios from 'vue-axios'
+} from 'vant';
 
-// Vue.use(VueAxios, axios)
+Vue.use(Vant);
+
+Vue.use(Dialog);
+
 
 //使用axios发送请求
 Vue.prototype.$axios = axios;
 
-Vue.config.productionTip = false
 
-Vue.baseURL = Vue.prototype.$axios.defaults.baseURL = 'http://127.0.0.1:3000';
+//axios基准地址
+axios.defaults.baseURL = 'http://127.0.0.1:3000';
 
-// Vue.prototype.$axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+// 路由守卫,所有的跳转都会被拦截经过这里；
+router.beforeEach((to, from, next) => {
+  // 是否有token
+  const hasToken = localStorage.getItem("Authorization");
+  // console.log(to);
+  // console.log(from);
+  // 是否是个人中心页
+
+  //判断是否要守卫的方法一；
+  // const pageNeedAuth = ['/mycenter', '/edit'];
+  // //只要to.path存在在这个数组中，则表示需要守卫的路由;
+  // if (pageNeedAuth.indexOf(to.path) >= 0) {
+  //   //判断是否有token
+  // }
+
+  //方法二：
+  //to.meata.pageNeedAuth//查找路由元信息；
+  if (to.path === '/mycenter' || to.path === '/mycenter/personalMsg') {
+    if (hasToken) {
+      return next();
+    } else {
+      // 没有token则跳转到登录页
+      Dialog.alert({
+        message: "ログインくださいねー",
+        theme: 'round-button',
+      }).then(() => {
+        // on close
+        console.log(111111);
+      });
+      return router.push("/login").catch(err => console.log(err))
+    }
+  }
+
+  // Vue.prototype.$axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+  next();
+})
 // 添加请求拦截器
-Vue.prototype.$axios.interceptors.request.use(function (config) {
+axios.interceptors.request.use((config) => {
   //config中保存了每次请求的各种具体信息，url，data，method等参数；
 
-  console.log(config);
+  // console.log(config);
   // console.log(config.url);
-  //若是没有token值，踢回登录页；
-  config.headers.Authorization = localStorage.getItem("Authorization")
-  //储存token的值；
-  // console.log(config.headers.Authorization);
-  // if (!config.headers.common["Authorization"]) {
-  //   Dialog.alert({
-  //     message: 'token不存在！',
-  //     theme: "round-button",
-  //   }).then(() => {
-  //     // on close
-  //   });
-  //   location.href = 'http://192.168.79.61:8081/#/login';
-  // }
+  //若是登录页是不带token值的
+  if (localStorage.getItem('Authorization') && !config.headers.Authorization) {
+    //自动带上token值；
+    config.headers.Authorization = 'Bearer ' + localStorage.getItem("Authorization")
+  }
   return config;
 }, function (error) {
   // 对请求错误做些什么
   return Promise.reject(error);
 });
+//对请求出现的错误处理进行响应拦截；
+axios.interceptors.response.use(res => {
+  //每次响应都会被拦截检查是否有错误信息;
+  const {
+    msg,
+    status
+  } = res.data;
+  const errMsg = /^4\d{2}$/;
+  if (msg && errMsg.test(status)) {
+    //有错误弹出错误信息;
+    Dialog.alert({
+      message: msg,
+      theme: 'round-button',
+    }).then(() => {
+      // on close
+      localStorage.removeItem("Authorization");
+      localStorage.removeItem('id');
+    });
+  }
+  if (msg == '用户信息验证失败') {
+    router.push('/login')
+  }
+  return res;
+
+}, err => Promise.reject(err));
+
+Vue.config.productionTip = false;
 
 new Vue({
   router,

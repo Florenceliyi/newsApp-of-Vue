@@ -6,6 +6,7 @@ import home from '../views/home.vue'
 import personCenter from '../views/myCenter.vue'
 import personalMsg from '../views/personalMsg.vue'
 
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -39,7 +40,11 @@ const routes = [
     path: '/mycenter',
     components: {
       personCenter
-    }
+    },
+    children: [{
+      path: 'personalMsg',
+      component: personalMsg
+    }]
 
   },
   {

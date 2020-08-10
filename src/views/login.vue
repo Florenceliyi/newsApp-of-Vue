@@ -38,7 +38,7 @@
 
 <script>
 import Vue from "vue";
-import { Dialog } from "vant";
+// import { Dialog } from "vant";
 import inputDom from "../components/inputDom";
 import btn from "../components/sumbitBtn";
 
@@ -63,7 +63,7 @@ export default {
     //若是父组件发送数据，则调用这里的方法；
     getUserData() {
       this.$axios({
-        url: Vue.baseURL + "/login",
+        url: "/login",
         method: "post",
         data: {
           username: this.objData.userName,
@@ -73,25 +73,31 @@ export default {
         .then((res) => {
           console.log(res.data);
           if (res.data.message == "登录成功") {
-            Dialog.alert({
-              message: res.data.message,
-              theme: "round-button",
-            }).then(() => {
-              // on close
-            });
+            this.$dialog
+              .alert({
+                message: res.data.message,
+                theme: "round-button",
+              })
+              .then(() => {
+                // on close
+              });
+            //可以用解构赋值语法简化：const {token, id} = res.data
+
             localStorage.setItem("Authorization", res.data.data.token);
 
             localStorage.setItem("id", res.data.data.user.id);
             // console.log(Vue.prototype.$axios.defaults.headers);
-
-            location.href = "http://192.168.79.61:8081/#/mycenter";
+            //跳转到个人中心页
+            this.$router.replace("/mycenter");
           } else {
-            Dialog.alert({
-              message: res.data.message,
-              theme: "round-button",
-            }).then(() => {
-              // on close
-            });
+            this.$dialog
+              .alert({
+                message: res.data.message,
+                theme: "round-button",
+              })
+              .then(() => {
+                // on close
+              });
           }
         })
         .catch((err) => console.log(err));

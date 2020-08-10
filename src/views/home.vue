@@ -23,13 +23,13 @@
 
 <script>
 import Vue from "vue";
-import { Tab, Tabs } from "vant";
+// import { Tab, Tabs } from "vant";
 import onePieceNews from "../components/onePieceNews";
 import twoPiecesNews from "../components/twopiecesNews";
 import videosNews from "../components/videosNews";
 import axios from "axios";
-Vue.use(Tab);
-Vue.use(Tabs);
+// Vue.use(Tab);
+// Vue.use(Tabs);
 
 export default {
   data() {
@@ -45,7 +45,7 @@ export default {
 
   mounted() {
     this.$axios({
-      url: "http://localhost:3000/post",
+      url: "/post",
       method: "GET",
       params: {},
     }).then((res) => {

@@ -58,7 +58,6 @@
 
 <script>
 import Vue from "vue";
-import { Dialog } from "vant";
 import inputDom from "../components/inputDom";
 import btn from "../components/sumbitBtn";
 export default {
@@ -87,7 +86,7 @@ export default {
     },
     getUserData() {
       this.$axios({
-        url: Vue.baseURL + "/register",
+        url: "/register",
         method: "post",
         data: {
           username: this.objData.userName,
@@ -97,20 +96,26 @@ export default {
       })
         .then((res) => {
           if (res.data.message == "注册成功") {
-            Dialog.alert({
-              message: res.data.message,
-              theme: "round-button",
-            }).then(() => {
-              // on close
-            });
-            location.href = "http://192.168.79.61:8081/#/login";
+            this.$dialog
+              .alert({
+                message: res.data.message,
+                theme: "round-button",
+              })
+              .then(() => {
+                // on close
+                this.$router.push("/login");
+              });
+
+            // location.href = "http://192.168.79.61:8081/#/login";
           } else {
-            Dialog.alert({
-              message: res.data.message,
-              theme: "round-button",
-            }).then(() => {
-              // on close
-            });
+            this.$dialog
+              .alert({
+                message: res.data.message,
+                theme: "round-button",
+              })
+              .then(() => {
+                // on close
+              });
           }
         })
         .catch((err) => console.log(err));
