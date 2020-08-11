@@ -38,7 +38,6 @@
 
 <script>
 import Vue from "vue";
-// import { Dialog } from "vant";
 import inputDom from "../components/inputDom";
 import btn from "../components/sumbitBtn";
 

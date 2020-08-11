@@ -16,7 +16,7 @@
             to="/mycenter/personalMsg"
             tag="img"
             v-else
-            src="../assets/images/bobo.jpg"
+            src="../../assets/images/bobo.jpg"
             class="cat"
             alt
           ></router-link>
@@ -46,8 +46,8 @@
     
 <script>
 import Vue from "vue";
-import littleComs from "../components/littleComs";
-import personal from "../views/personalMsg";
+import littleComs from "../../components/littleComs";
+import personal from "./personalMsg";
 // Vue.use(Popup);
 export default {
   data() {
@@ -70,7 +70,7 @@ export default {
       //通过id判断要跳转到哪个页面；
       //我的关注
       if (id == 1) {
-        console.log(1111);
+        this.$router.push("/myFollowers");
       } else if (id == 2) {
         //我的跟帖
         console.log(2222);
@@ -139,7 +139,7 @@ export default {
 .person {
   width: 100vw;
   height: 100vh;
-  background: url("../assets/images/webp.jpg") left bottom;
+  background: url("../../assets/images/webp.jpg") left bottom;
   position: relative;
   header {
     position: relative;
@@ -147,7 +147,7 @@ export default {
     height: 25vh;
     display: flex;
     align-items: center;
-    border-bottom: 4px solid rgb(177, 131, 105);
+    border-bottom: 2px solid rgb(177, 131, 105);
     .profile {
       flex: 1;
       div {

@@ -23,7 +23,7 @@ export default {};
     width: 70vw;
   }
   .des {
-    margin-top: 3vh;
+    margin-top: 2vw;
     font-size: 14px;
     color: #666;
     span {

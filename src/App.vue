@@ -11,6 +11,8 @@
     <router-view name="home"></router-view>
     <router-view name="personCenter"></router-view>
     <router-view name="personalMsg"></router-view>
+    <router-view name="myFollowers"></router-view>
+    <router-view name="follow"></router-view>
   </div>
 </template>
 
@@ -27,4 +29,7 @@ export default {
 // button {
 //   width: 20vw;
 // }
+div {
+  position: relative;
+}
 </style>

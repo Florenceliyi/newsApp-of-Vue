@@ -1,6 +1,7 @@
 <template id='home'>
   <div class="home">
     <div class="pre-header">
+      <!-- 头部 -->
       <div class="header">
         <a href="#" class="logo"></a>
         <div class="search">
@@ -9,14 +10,17 @@
         </div>
         <a href="#" class="login iconfont iconwode"></a>
       </div>
-      <van-tabs v-model="active" animated class="nav">
-        <van-tab v-for="index in 6" :title="'关注 ' + index" :key="index"></van-tab>
+      <!-- 新闻导航 -->
+      <van-tabs sticky swipeable scroll>
+        <van-tab v-for="index in 8" :title="'标签 ' + index" :key="index" sticky swipeable scroll>
+          <onePieceNews></onePieceNews>
+          <twoPiecesNews></twoPiecesNews>
+          <videosNews></videosNews>
+          <videosNews></videosNews>
+          <videosNews></videosNews>
+          <videosNews></videosNews>
+        </van-tab>
       </van-tabs>
-    </div>
-    <div class="lists">
-      <onePieceNews></onePieceNews>
-      <twoPiecesNews></twoPiecesNews>
-      <videosNews></videosNews>
     </div>
   </div>
 </template>
@@ -28,8 +32,6 @@ import onePieceNews from "../components/onePieceNews";
 import twoPiecesNews from "../components/twopiecesNews";
 import videosNews from "../components/videosNews";
 import axios from "axios";
-// Vue.use(Tab);
-// Vue.use(Tabs);
 
 export default {
   data() {
@@ -52,6 +54,11 @@ export default {
       console.log(res);
     });
   },
+  methods: {
+    scroll(data) {
+      console.log(data);
+    },
+  },
 };
 </script>
 
@@ -61,14 +68,14 @@ input::-webkit-input-placeholder {
   //   font-size: 16px;
 }
 .home {
+  // position: relative;
   overflow: hidden;
   background: #ffccd1;
-
   .pre-header {
-    position: fixed;
-    top: 0;
-
-    .header {
+    ::v-deep .header {
+      position: fixed;
+      top: 0;
+      z-index: 666;
       width: 100vw;
       height: 10vh;
       background: #f44236;
@@ -113,12 +120,9 @@ input::-webkit-input-placeholder {
         color: #fff;
       }
     }
-    .nav {
-      width: 100%;
-    }
-  }
-  .lists {
-    margin-top: 25vw;
+    // .nav {
+    //   width: 100%;
+    // }
   }
 }
 </style>

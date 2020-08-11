@@ -26,8 +26,9 @@
 </template>
 
 <script>
-import littleComs from "../components/littleComs";
-import EditPopUp from "../components/EditPopUp";
+import littleComs from "../../components/littleComs";
+import EditPopUp from "../../components/EditPopUp";
+import { log } from "util";
 
 export default {
   data() {
@@ -81,31 +82,56 @@ export default {
       let formdata = new FormData();
       // //添加图片到formata中，进行二进制编译;
       formdata.append("file", fileObj.file);
-      this.$axios({
-        url: "/upload/",
-        method: "post",
-        data: formdata,
-      })
-        .then((res) => {
-          console.log(res.data.data.url);
 
-          this.$axios({
-            url: "/user_update/" + localStorage.getItem("id"),
-            method: "post",
-            data: {
-              head_img: res.data.data.url,
-            },
-          })
-            .then((res) => {
-              // 修改完毕, 刷新数据
-              console.log(res);
-              this.srcImg = "http://127.0.0.1:3000" + res.data.data.head_img;
-              console.log(this.srcImg);
-              this.renderPage();
-            })
-            .catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(err));
+      /*async 改写axios*/
+
+      let _this = this;
+      async function sendReq(param) {
+        const backdata = await _this.$axios({
+          url: "/upload/",
+          method: "post",
+          data: formdata,
+        });
+
+        const backdata2 = await _this.$axios({
+          url: "/user_update/" + localStorage.getItem("id"),
+          method: "post",
+          data: { head_img: backdata.data.data.url },
+        });
+        return backdata2;
+      }
+      sendReq().then((res) => {
+        console.log(res);
+        this.srcImg = "http://127.0.0.1:3000" + res.data.data.head_img;
+        this.renderPage();
+      });
+
+      //原来的axios用法；
+      // this.$axios({
+      //   url: "/upload/",
+      //   method: "post",
+      //   data: formdata,
+      // })
+      // .then((res) => {
+      //   // console.log(res.data.data.url);
+      //   //提交编辑好的数据，发送ajax请求；
+      // this.$axios({
+      //   url: "/user_update/" + localStorage.getItem("id"),
+      //   method: "post",
+      //   data: {
+      //     head_img: res.data.data.url,
+      //   },
+      // })
+      //   .then((res) => {
+      //     // 修改完毕, 刷新数据
+      //     // console.log(res);
+      //     this.srcImg = "http://127.0.0.1:3000" + res.data.data.head_img;
+      //     // console.log(this.srcImg);
+      //     this.renderPage();
+      //   })
+      //   //   .catch((err) => console.log(err));
+      // })
+      // .catch((err) => console.log(err));
     },
   },
 };
@@ -125,7 +151,7 @@ export default {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    background: url("../assets/images/webp.jpg") -48px -202px;
+    background: url("../../assets/images/webp.jpg") -48px -202px;
     ::v-deep .van-uploader {
       left: 39vw !important;
       z-index: 999;

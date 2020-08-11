@@ -25,7 +25,7 @@ export default {
         nickname: "",
         password: "",
         gender: "",
-        editHeadImg: "",
+        // editHeadImg: "",
       },
       radio: "",
       userData: {},
@@ -37,7 +37,7 @@ export default {
     //一进来页面首先加载已经编辑好的数据;
     this.renderPage();
   },
-  props: ["headImg"],
+
   methods: {
     renderPage() {
       this.$axios({
@@ -66,7 +66,7 @@ export default {
     sure() {
       //提交编辑好的数据，发送axios请求；
       //   this.isShow = true;
-      console.log(this.editHeadImg);
+      // console.log(this.editHeadImg);
       this.newData.gender = this.radio == "1" ? 1 : 0;
       this.$axios({
         url: "/user_update/" + localStorage.getItem("id"),
@@ -77,6 +77,8 @@ export default {
           console.log(res);
           // 修改完毕, 刷新数据
           this.renderPage();
+          this.isShow = false;
+          this.$emit("popUp", this.isShow);
         })
         .catch((err) => console.log(err));
     },
