@@ -11,14 +11,18 @@
         <a href="#" class="login iconfont iconwode"></a>
       </div>
       <!-- 新闻导航 -->
-      <van-tabs sticky swipeable scroll>
-        <van-tab v-for="index in 8" :title="'标签 ' + index" :key="index" sticky swipeable scroll>
-          <onePieceNews></onePieceNews>
-          <twoPiecesNews></twoPiecesNews>
-          <videosNews></videosNews>
-          <videosNews></videosNews>
-          <videosNews></videosNews>
-          <videosNews></videosNews>
+      <van-tabs sticky swipeable scroll v-model="tabIndex">
+        <van-tab
+          v-for="(item, index) in tabLists"
+          :title="item.name"
+          :key="index"
+          sticky
+          swipeable
+          scroll
+        >
+          <onePieceNews v-for="(item, index) in oneCover" :key="index" :item="item"></onePieceNews>
+          <twoPiecesNews v-for="(item, index) in twoCovers" :key="index +1000 " :item="item"></twoPiecesNews>
+          <videosNews v-for="(item, index) in videoCover" :key="index + 2000" :item="item"></videosNews>
         </van-tab>
       </van-tabs>
     </div>
@@ -32,11 +36,18 @@ import onePieceNews from "../components/onePieceNews";
 import twoPiecesNews from "../components/twopiecesNews";
 import videosNews from "../components/videosNews";
 import axios from "axios";
+import { log } from "util";
 
 export default {
   data() {
     return {
       active: 0,
+      tabLists: "",
+      tabIndex: "",
+      //需要渲染的图片张数；
+      oneCover: [],
+      twoCovers: [],
+      videoCover: [],
     };
   },
   components: {
@@ -44,14 +55,37 @@ export default {
     twoPiecesNews,
     videosNews,
   },
-
+  watch: {
+    tabIndex: function (val) {
+      console.log(val);
+    },
+  },
   mounted() {
+    //进来加载文章列表信息，渲染页面;
     this.$axios({
       url: "/post",
-      method: "GET",
-      params: {},
+    })
+      .then((res) => {
+        console.log(res);
+        const data = res.data.data;
+        // console.log(data)
+        //获取data的type属性，如果是1则是图片，2则是视频;
+        for (let item of data) {
+          if (item.type == 1 && item.cover.length == 1) {
+            this.oneCover.push(item);
+          } else if (item.type == 1 && item.cover.length > 1) {
+            this.twoCovers.push(item);
+          } else {
+            this.videoCover.push(item);
+          }
+        }
+      })
+      .catch((err) => console.log(err));
+    //进来加载栏目列表信息;
+    this.$axios({
+      url: "/category",
     }).then((res) => {
-      console.log(res);
+      this.tabLists = res.data.data;
     });
   },
   methods: {
@@ -73,9 +107,9 @@ input::-webkit-input-placeholder {
   background: #ffccd1;
   .pre-header {
     ::v-deep .header {
-      position: fixed;
-      top: 0;
-      z-index: 666;
+      // position: fixed;
+      // top: 0;
+      // z-index: 666;
       width: 100vw;
       height: 10vh;
       background: #f44236;
@@ -120,9 +154,12 @@ input::-webkit-input-placeholder {
         color: #fff;
       }
     }
-    // .nav {
-    //   width: 100%;
-    // }
+    ::v-deep .van-tabs__wrap--scrollable .van-tab {
+      padding: 0 40px;
+    }
+    ::v-deep .van-tabs__line {
+      left: -1px;
+    }
   }
 }
 </style>

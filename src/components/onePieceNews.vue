@@ -1,26 +1,43 @@
 <template id='onePieceNews'>
   <div class="news-content">
-    <div class="title">国家统计局：2019年中国人均国民总收入10410美元</div>
+    <div class="news">
+      <div class="title">{{item.title}}</div>
+      <div class="news-img">
+        <img :src="item.cover[0].url" alt />
+      </div>
+    </div>
     <p class="des">
-      <span>火星时报</span>
+      <span>{{item.user.nickname}}</span>
       <span>52跟帖</span>
     </p>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["item"],
+};
 </script>
 
 <style scoped lang='scss'>
 .news-content {
   width: 100vw;
-  height: 15vh;
+  height: 22vh;
   padding: 3vh 0 4vh 3vw;
   background: #ffebed;
   border-bottom: 1px solid #ccc;
-  .title {
-    width: 70vw;
+  .news {
+    display: flex;
+    .title {
+      width: 60vw;
+    }
+    .news-img {
+      margin-left: 2vw;
+      img {
+        width: 30vw;
+        height: 14vh;
+      }
+    }
   }
   .des {
     margin-top: 2vw;

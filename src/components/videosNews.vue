@@ -6,14 +6,11 @@
           <i class="iconfont iconshipin"></i>
         </div>
       </div>
-      <div class="title">木 雕 炮 姐 御 坂 美 琴</div>
+      <div class="title">{{item.title}}</div>
 
-      <video
-        src="https://cn-gdfs2-cc-bcache-13.bilivideo.com/upgcxcode/57/14/221341457/221341457-1-16.mp4?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&uipk=5&nbs=1&deadline=1596857063&gen=playurl&os=bcache&oi=3698568820&trid=b0a14716e97d4672aed0a20a42c78c0ch&platform=html5&upsig=7ee99274eb3186c3a20dd1a239fdebb4&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,platform&cdnid=9842&mid=72987984&cip=211.162.51.156&logo=80000000"
-        controls="controls"
-      ></video>
+      <img :src="item.cover[0].url" alt />
       <div class="source">
-        <span>火星时报</span>
+        <span>{{item.user.nickname}}</span>
         <span>52跟帖</span>
       </div>
     </div>
@@ -26,6 +23,10 @@ export default {
     return {
       isShow: true,
     };
+  },
+  props: ["item"],
+  mounted() {
+    // console.log(this.item);
   },
   methods: {
     clicked() {
@@ -82,6 +83,9 @@ export default {
       margin-left: 4vw;
       width: 70vw;
     }
+  }
+  img {
+    width: 100%;
   }
   .source {
     position: absolute;
