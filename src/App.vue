@@ -13,6 +13,7 @@
     <router-view name="personalMsg"></router-view>
     <router-view name="myFollowers"></router-view>
     <router-view name="follow"></router-view>
+    <router-view name="newsDetail"></router-view>
   </div>
 </template>
 

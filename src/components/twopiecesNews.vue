@@ -1,12 +1,12 @@
 <template id='twopiecesNews'>
-  <div class="news-content">
+  <div class="news-content" v-if="item.type ==1 && item.cover.length == 3">
     <div class="title">{{item.title}}</div>
     <div class="images">
       <img v-for="(value, key) in item.cover" :key="key" :src="value.url" alt />
     </div>
     <div class="source">
       <span>{{item.user.nickname}}</span>
-      <span>52跟帖</span>
+      <span>{{item.commont_length}}</span>
     </div>
   </div>
 </template>

@@ -2,7 +2,7 @@
   <div class="myfollowers">
     <header>
       我的关注
-      <i class="iconfont iconjiantou2"></i>
+      <i class="iconfont iconjiantou2" @click="goback"></i>
     </header>
     <div class="follower-list">
       <followers
@@ -45,6 +45,9 @@ export default {
           console.log(this.friendsData);
         })
         .catch((err) => console.log(err));
+    },
+    goback() {
+      this.$router.back();
     },
   },
 };

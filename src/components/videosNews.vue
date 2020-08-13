@@ -1,5 +1,8 @@
 <template>
-  <div class="news-content">
+  <div
+    class="news-content"
+    v-if="item.type == 2 && item.cover.length >= 1 && item.cover.length <= 3"
+  >
     <div class="videos">
       <div class="mask" v-show="isShow">
         <div class="play" @click="clicked">
@@ -11,7 +14,7 @@
       <img :src="item.cover[0].url" alt />
       <div class="source">
         <span>{{item.user.nickname}}</span>
-        <span>52跟帖</span>
+        <span>{{item.commont_length}}</span>
       </div>
     </div>
   </div>

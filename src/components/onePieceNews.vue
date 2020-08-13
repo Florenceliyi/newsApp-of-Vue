@@ -1,5 +1,5 @@
 <template id='onePieceNews'>
-  <div class="news-content">
+  <div class="news-content" v-if="item.type == 1 && item.cover.length ==1 ">
     <div class="news">
       <div class="title">{{item.title}}</div>
       <div class="news-img">
@@ -8,7 +8,7 @@
     </div>
     <p class="des">
       <span>{{item.user.nickname}}</span>
-      <span>52跟帖</span>
+      <span>{{item.comment_length}}</span>
     </p>
   </div>
 </template>

@@ -8,21 +8,49 @@
           <i class="iconfont iconsearch"></i>
           <input type="text" placeholder="搜索新闻" />
         </div>
-        <a href="#" class="login iconfont iconwode"></a>
+        <a href="/#/mycenter" class="login iconfont iconwode"></a>
       </div>
       <!-- 新闻导航 -->
       <van-tabs sticky swipeable scroll v-model="tabIndex">
         <van-tab
-          v-for="(item, index) in tabLists"
+          v-for="(item, index) in categoryLists"
           :title="item.name"
           :key="index"
           sticky
           swipeable
           scroll
         >
-          <onePieceNews v-for="(item, index) in oneCover" :key="index" :item="item"></onePieceNews>
-          <twoPiecesNews v-for="(item, index) in twoCovers" :key="index +1000 " :item="item"></twoPiecesNews>
-          <videosNews v-for="(item, index) in videoCover" :key="index + 2000" :item="item"></videosNews>
+          <!-- 4. 无限加载列表 -->
+          <!-- load 滚动到底部时触发的加载事件, 需要自己写逻辑
+        v-model 当前是否正在执行加载过程
+        finished 当前的列表是否已经到底结束, 如果是的话, 这次请求结束后下一次不会再继续了
+        immediate-check 禁止页面一进来就开始读取 false
+          finished-text 页面拉到底的时候发出的提示-->
+          <van-list
+            v-model="item.loading"
+            :finished="item.finished"
+            finished-text="何もないよ～～"
+            @load="getMorePages"
+            :immediate-check="false"
+            loading-text="ダウンロード中。。。"
+            offset="0"
+          >
+            <onePieceNews
+              v-for="(item, index) in categoryLists[tabIndex].postList"
+              :key="index"
+              :item="item"
+            ></onePieceNews>
+            <twoPiecesNews
+              v-for="(item, index) in categoryLists[tabIndex].postList"
+              :key="index + 1000 "
+              :item="item"
+            ></twoPiecesNews>
+            <videosNews
+              v-for="(item, index) in categoryLists[tabIndex].postList"
+              :key="index + 2000"
+              :item="item"
+            ></videosNews>
+          </van-list>
         </van-tab>
       </van-tabs>
     </div>
@@ -37,17 +65,15 @@ import twoPiecesNews from "../components/twopiecesNews";
 import videosNews from "../components/videosNews";
 import axios from "axios";
 import { log } from "util";
+import { setTimeout } from "timers";
 
 export default {
   data() {
     return {
-      active: 0,
-      tabLists: "",
-      tabIndex: "",
-      //需要渲染的图片张数；
-      oneCover: [],
-      twoCovers: [],
-      videoCover: [],
+      //导航栏默认选中的对应索引内容；
+      tabIndex: 0,
+      //导航栏列表
+      categoryLists: [],
     };
   },
   components: {
@@ -55,42 +81,92 @@ export default {
     twoPiecesNews,
     videosNews,
   },
+  computed: {
+    //实现点击，将当前tab栏选项id放入数组中的功能;
+    getActiveId() {
+      const currentCategory = this.categoryLists[this.tabIndex];
+      return currentCategory.id;
+    },
+  },
   watch: {
-    tabIndex: function (val) {
-      console.log(val);
+    tabIndex(index) {
+      // console.log(index);
+      const currentCategory = this.categoryLists[this.tabIndex];
+      //postList若有数据表明已经触发了滚动加载，此时不需要再强制重新加载，只有当为空时才需要重新渲染加载；
+      if (currentCategory.postList.length == 0) {
+        this.renderArticles();
+      }
     },
   },
   mounted() {
-    //进来加载文章列表信息，渲染页面;
-    this.$axios({
-      url: "/post",
-    })
-      .then((res) => {
-        console.log(res);
-        const data = res.data.data;
-        // console.log(data)
-        //获取data的type属性，如果是1则是图片，2则是视频;
-        for (let item of data) {
-          if (item.type == 1 && item.cover.length == 1) {
-            this.oneCover.push(item);
-          } else if (item.type == 1 && item.cover.length > 1) {
-            this.twoCovers.push(item);
-          } else {
-            this.videoCover.push(item);
-          }
-        }
-      })
-      .catch((err) => console.log(err));
-    //进来加载栏目列表信息;
-    this.$axios({
-      url: "/category",
-    }).then((res) => {
-      this.tabLists = res.data.data;
-    });
+    //111111111111.进来页面渲染tab栏；
+    this.renderTabLists();
   },
   methods: {
-    scroll(data) {
-      console.log(data);
+    renderArticles() {
+      //2222222222222222.首先获取对应栏目的文章数据;
+      const currentCategory = this.categoryLists[this.tabIndex];
+      console.log(currentCategory);
+      this.$axios({
+        url: "/post",
+        params: {
+          pageIndex: currentCategory.pageIndex,
+          category: this.getActiveId,
+          pageSize: currentCategory.pageSize,
+        },
+      })
+        .then((res) => {
+          /*加载页面的逻辑，实现瀑布流的逻辑*/
+          /*由于实现瀑布流需要拼接数组来制造加数据，需要在滚动到底部时，在postList中重新加入新的数据*/
+          currentCategory.postList = [
+            ...currentCategory.postList,
+            ...res.data.data,
+          ];
+          // console.log(currentCategory);
+          // console.log(currentCategory.postList);
+
+          //33333333333333.3滚动默认调用vant插件，手动设置loading为false，表示加载结束；
+          currentCategory.loading = false;
+          //33333333333333.4  加载结束条件：当文章条数少于5条时，结束加载数据;
+          if (res.data.data.length < currentCategory.pageSize) {
+            currentCategory.finished = true;
+          }
+        })
+        .catch((err) => console.log(err));
+    },
+    renderTabLists() {
+      //进来加载栏目列表信息;
+      this.$axios({
+        url: "/category",
+      }).then((res) => {
+        //11111111111.2将所有需要用到的数据包装成一个数组，方便后面渲染文章列表可以获取到
+        const newLoadingData = res.data.data.map((item) => {
+          //return返回一个修改包装后的新的数组，保存了vant瀑布流插件要用到的loading、finished属性；
+          //postList用于拼接当前栏目的数据，后面需要多加载一页的加数据，拼接到这里;
+          return {
+            ...item,
+            postList: [],
+            pageIndex: 1,
+            pageSize: 4,
+            loading: false,
+            finished: false,
+          };
+        });
+        this.categoryLists = newLoadingData;
+
+        //11111111111.3进来加载栏目完毕后，调用调用第0个返回数据的文章列表对象，渲染文章列表；
+        this.renderArticles();
+      });
+    },
+    getMorePages() {
+      //333333333333333333.1    首先获取当前栏目对应的数据;
+      //由于需要将页码设置多加1，需要拿到当前栏目的类别对象；
+      const currentCategory = this.categoryLists[this.tabIndex];
+      currentCategory.pageIndex += 1;
+      //333333333333333333.2   设置延迟可以清楚看到懒加载现象；
+      setTimeout(() => {
+        this.renderArticles();
+      }, 1000);
     },
   },
 };
@@ -155,10 +231,13 @@ input::-webkit-input-placeholder {
       }
     }
     ::v-deep .van-tabs__wrap--scrollable .van-tab {
-      padding: 0 40px;
+      padding: 0 34x;
     }
     ::v-deep .van-tabs__line {
       left: -1px;
+    }
+    ::v-deep .van-sticky--fixed {
+      z-index: 9999;
     }
   }
 }
