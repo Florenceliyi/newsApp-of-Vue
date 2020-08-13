@@ -35,16 +35,19 @@
             loading-text="ダウンロード中。。。"
             offset="0"
           >
+            <!-- 单图文章子组件 -->
             <onePieceNews
               v-for="(item, index) in categoryLists[tabIndex].postList"
               :key="index"
               :item="item"
             ></onePieceNews>
+            <!-- 多图文章子组件 -->
             <twoPiecesNews
               v-for="(item, index) in categoryLists[tabIndex].postList"
               :key="index + 1000 "
               :item="item"
             ></twoPiecesNews>
+            <!-- 视频内容子组件 -->
             <videosNews
               v-for="(item, index) in categoryLists[tabIndex].postList"
               :key="index + 2000"
@@ -93,8 +96,12 @@ export default {
       // console.log(index);
       const currentCategory = this.categoryLists[this.tabIndex];
       //postList若有数据表明已经触发了滚动加载，此时不需要再强制重新加载，只有当为空时才需要重新渲染加载；
+      console.log(currentCategory.postList);
       if (currentCategory.postList.length == 0) {
+        console.log("没有数据，渲染页面");
         this.renderArticles();
+      } else {
+        console.log("有数据，不用渲染");
       }
     },
   },
@@ -123,7 +130,7 @@ export default {
             ...res.data.data,
           ];
           // console.log(currentCategory);
-          // console.log(currentCategory.postList);
+          console.log(currentCategory.postList);
 
           //33333333333333.3滚动默认调用vant插件，手动设置loading为false，表示加载结束；
           currentCategory.loading = false;

@@ -8,6 +8,7 @@ import personalMsg from '../views/mycenter/personalMsg.vue'
 import myFollowers from '../views/mycenter/myFollowers.vue'
 import follow from '../views/mycenter/follow.vue'
 import newsDetail from '../views/newsDetail.vue'
+import videoDes from '../views/videoDes.vue'
 
 
 Vue.use(VueRouter)
@@ -79,6 +80,11 @@ const routes = [{
     path: '/newsDetail',
     components: {
       newsDetail
+    }
+  }, {
+    path: '/videoDes',
+    components: {
+      videoDes
     }
   }
 

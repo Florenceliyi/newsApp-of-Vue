@@ -1,5 +1,5 @@
 <template id='onePieceNews'>
-  <div class="news-content" v-if="item.type == 1 && item.cover.length ==1 ">
+  <div class="news-content" v-if="item.type == 1 && item.cover.length ==1 " @click="goToNesDes">
     <div class="news">
       <div class="title">{{item.title}}</div>
       <div class="news-img">
@@ -16,6 +16,11 @@
 <script>
 export default {
   props: ["item"],
+  methods: {
+    goToNesDes() {
+      this.$router.push({ path: "/newsDetail", query: { id: this.item.id } });
+    },
+  },
 };
 </script>
 

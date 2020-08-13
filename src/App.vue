@@ -14,6 +14,7 @@
     <router-view name="myFollowers"></router-view>
     <router-view name="follow"></router-view>
     <router-view name="newsDetail"></router-view>
+    <router-view name="videoDes"></router-view>
   </div>
 </template>
 
