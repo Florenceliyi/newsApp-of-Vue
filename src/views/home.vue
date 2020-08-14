@@ -16,6 +16,7 @@
           v-for="(item, index) in categoryLists"
           :title="item.name"
           :key="index"
+          :to="'/?category='+index"
           sticky
           swipeable
           scroll
@@ -33,7 +34,6 @@
             @load="getMorePages"
             :immediate-check="false"
             loading-text="ダウンロード中。。。"
-            offset="0"
           >
             <!-- 单图文章子组件 -->
             <onePieceNews
@@ -74,7 +74,7 @@ export default {
   data() {
     return {
       //导航栏默认选中的对应索引内容；
-      tabIndex: 0,
+      tabIndex: Number(this.$route.query.category) || 0,
       //导航栏列表
       categoryLists: [],
     };
@@ -123,6 +123,7 @@ export default {
         },
       })
         .then((res) => {
+          console.log(res.data.data);
           /*加载页面的逻辑，实现瀑布流的逻辑*/
           /*由于实现瀑布流需要拼接数组来制造加数据，需要在滚动到底部时，在postList中重新加入新的数据*/
           currentCategory.postList = [
@@ -130,7 +131,7 @@ export default {
             ...res.data.data,
           ];
           // console.log(currentCategory);
-          console.log(currentCategory.postList);
+          // console.log(currentCategory.postList);
 
           //33333333333333.3滚动默认调用vant插件，手动设置loading为false，表示加载结束；
           currentCategory.loading = false;
@@ -138,6 +139,7 @@ export default {
           if (res.data.data.length < currentCategory.pageSize) {
             currentCategory.finished = true;
           }
+          console.log(this.categoryLists[this.tabIndex].postList);
         })
         .catch((err) => console.log(err));
     },

@@ -1,5 +1,5 @@
-<template id='twopiecesNews'>
-  <div class="news-content" v-if="item.type ==1 && item.cover.length == 3">
+<template id='twopiecesNews'  >
+  <div class="news-content" @click="goToNesDes" v-if="item.type ==1 && item.cover.length == 3">
     <div class="title">{{item.title}}</div>
     <div class="images">
       <img v-for="(value, key) in item.cover" :key="key" :src="value.url" alt />
@@ -15,6 +15,11 @@
 export default {
   props: ["item"],
   mounted() {},
+  methods: {
+    goToNesDes() {
+      this.$router.push({ path: "/newsDetail", query: { id: this.item.id } });
+    },
+  },
 };
 </script>
 

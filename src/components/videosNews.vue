@@ -1,8 +1,5 @@
-<template>
-  <div
-    class="news-content"
-    v-if="item.type == 2 && item.cover.length >= 1 && item.cover.length <= 3"
-  >
+<template >
+  <div class="news-content" v-if="item.type == 2 && item.cover.length ==1 && item.cover[0].url">
     <div class="videos">
       <div class="mask" v-show="isShow">
         <div class="play" @click="clicked">
@@ -33,7 +30,10 @@ export default {
   },
   methods: {
     clicked() {
+      //1.点击不显示；
       this.isShow = false;
+      //2.点击进去视频页面;
+      this.$router.push({ path: "/videoDes", query: { id: this.item.id } });
     },
   },
 };

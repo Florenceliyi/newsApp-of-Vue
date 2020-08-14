@@ -9,6 +9,7 @@ import myFollowers from '../views/mycenter/myFollowers.vue'
 import follow from '../views/mycenter/follow.vue'
 import newsDetail from '../views/newsDetail.vue'
 import videoDes from '../views/videoDes.vue'
+import myCollection from '../views/mycenter/myCollection.vue'
 
 
 Vue.use(VueRouter)
@@ -44,7 +45,7 @@ const routes = [{
   },
   //个人中心页
   {
-    path: '/mycenter',
+    path: '/myCenter',
     components: {
       personCenter
     },
@@ -70,21 +71,31 @@ const routes = [{
       myFollowers
     }
   },
+  //测试添加关注页面；
   {
     path: '/follow',
     components: {
       follow
     }
   },
+  //新闻详情页面
   {
     path: '/newsDetail',
     components: {
       newsDetail
     }
-  }, {
+  },
+  //视频详情页面
+  {
     path: '/videoDes',
     components: {
       videoDes
+    }
+  },
+  {
+    path: '/myCollection',
+    components: {
+      myCollection
     }
   }
 

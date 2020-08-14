@@ -3,6 +3,10 @@
     <div class="header">
       <i class="arrows iconfont iconjiantou2" @click="goBack"></i>
       <img src="../assets/images/logo.png" alt />
+      <span
+        :class="pageData.has_follow? 'followed':''"
+        @click="sendFollowReq"
+      >{{pageData.has_follow? '已关注':'关注'}}</span>
     </div>
     <div class="title">{{pageData.title}}</div>
     <div class="source" v-if="pageData.user">
@@ -47,7 +51,10 @@ export default {
     };
   },
   mounted() {
-    const id = location.hash.split("=")[1];
+    // const id = location.hash.split("=")[1];
+    //this.$route保存了当前页面路由的所有信息;
+    console.log(this.$route);
+    const id = this.$route.query.id;
     this.newsId = id;
     //一进页面获取对应文章id，渲染页面；
     this.$axios({
@@ -100,6 +107,46 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    sendFollowReq() {
+      //获取关注的用户ID,判断有否token,无提示去登录；
+      if (localStorage.getItem("Authorization")) {
+        //若是已经关注了；
+        console.log(this.pageData.has_follow);
+        if (this.pageData.has_follow) {
+          this.$axios({
+            url: "/user_unfollow/" + this.pageData.user.id,
+          }).then((res) => {
+            console.log(res.data.message);
+            if (res.data.message == "取消关注成功") {
+              //修改保存好的关注数据;
+              this.pageData.has_follow = false;
+            }
+          });
+        } else {
+          //没有关注；
+          this.$axios({
+            url: "/user_follows/" + this.pageData.user.id,
+          })
+            .then((res) => {
+              console.log(res.data.message);
+              if (res.data.message == "关注成功") {
+                //修改保存好的关注数据;
+                this.pageData.has_follow = true;
+              }
+            })
+            .catch((err) => console.log(err));
+        }
+      } else {
+        this.$dialog
+          .alert({
+            message: "ログインしてくださいね～",
+            theme: "round-button",
+          })
+          .then(() => {
+            // on close
+          });
+      }
+    },
   },
 };
 </script>
@@ -115,6 +162,7 @@ export default {
     width: 100%;
     height: 14vw;
     line-height: 14vw;
+    position: relative;
     i {
       font-size: 19px;
       margin-left: 3vw;
@@ -124,6 +172,24 @@ export default {
       width: 20vw;
       height: 10vw;
       margin-bottom: 1vw;
+    }
+    span {
+      position: absolute;
+      display: block;
+      right: 4vw;
+      width: 14vw;
+      height: 10vw;
+      line-height: 10vw;
+      text-align: center;
+      top: 4vw;
+      border: 1px solid #000;
+      border-radius: 15px;
+      font-weight: bold;
+      //已关注的字体和边框变红
+      &.followed {
+        border: 2px solid rgba(248, 6, 87, 0.986);
+        color: rgba(248, 6, 87, 0.986);
+      }
     }
   }
   .title {

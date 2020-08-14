@@ -1,5 +1,5 @@
-<template id='onePieceNews'>
-  <div class="news-content" v-if="item.type == 1 && item.cover.length ==1 " @click="goToNesDes">
+<template id='onePieceNews' >
+  <div class="news-content" @click="goToNesDes" v-if="item.type == 1 && item.cover.length ==1 ">
     <div class="news">
       <div class="title">{{item.title}}</div>
       <div class="news-img">
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { log } from "util";
 export default {
   props: ["item"],
   methods: {

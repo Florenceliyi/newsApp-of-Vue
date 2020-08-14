@@ -1,29 +1,36 @@
 <template>
   <div class="news-detail">
     <div class="header">
-      <i class="arrows iconfont iconjiantou2"></i>
+      <i class="arrows iconfont iconjiantou2" @click="goBack"></i>
       <img src="../assets/images/logo.png" alt />
     </div>
     <div class="videos-content">
-      <span>
+      <!-- <span>
         <i class="iconfont iconshipin"></i>
-      </span>
-      <video src controls></video>
+      </span>-->
+      <video
+        v-if="pageData.cover"
+        src="https://video.pearvideo.com/mp4/adshort/20200421/cont-1670293-15098199_adpkg-ad_hd.mp4"
+        controls
+        :poster="pageData.cover[0].url"
+        ref="video"
+      ></video>
     </div>
-    <div class="source">
+    <div class="source" v-if="pageData.user">
       <span>
-        <img src="../assets/images/bobo.jpg" alt /> 火星时报
+        <img :src="this.$axios.defaults.baseURL + pageData.user.head_img" alt />
+        {{pageData.user.nickname}}
       </span>
-      <div class="follows">
-        <span>关注</span>
+      <div class="follows" :class="pageData.has_follow? 'followed':''" @click="sendFollowReq">
+        <span>{{pageData.has_follow? '已关注':'关注'}}</span>
       </div>
     </div>
-    <div class="title">耿直！关晓彤大方回应私服争议：时好时坏吧</div>
+    <div class="title">{{pageData.title}}</div>
 
     <div class="news-content"></div>
     <div class="icons">
       <a href="javascript:void(0)">
-        <i class="iconfont icondianzan">112</i>
+        <i class="iconfont icondianzan">{{pageData.like_length}}</i>
       </a>
       <a href="javascript:void(0)">
         <i class="iconfont iconweixin"></i>微信
@@ -39,15 +46,123 @@
       <p>暂无跟帖，抢占沙发</p>
     </div>
     <!-- 这里是写评论的子组件 -->
-    <commentsFooter></commentsFooter>
+    <commentsFooter @sendClick="getCollected"></commentsFooter>
   </div>
 </template>
 
 <script>
 import commentsFooter from "../components/commentsFooter";
+import { log } from "util";
 export default {
+  data() {
+    return {
+      userId: 0,
+      pageData: {},
+    };
+  },
   components: {
     commentsFooter,
+  },
+  mounted() {
+    this.renderPage();
+  },
+  methods: {
+    //点击箭头，回退上一页
+    goBack() {
+      this.$router.back();
+    },
+    //发送收藏的ajax请求
+    getCollected(hasFollowed) {
+      console.log(hasFollowed);
+      //若是有token则发送收藏请求，没有提示请先登录;
+      if (localStorage.getItem("Authorization")) {
+        //判断是取消收藏还是收藏的请求；
+        if (hasFollowed) {
+          //没有关注时；
+          this.$axios({
+            url: "/post_star/" + this.newsId,
+          })
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => console.log(err));
+        } else {
+          this.sendFollowData();
+        }
+      } else {
+        this.$dialog
+          .alert({
+            message: "ログインしてくださいね～",
+            theme: "round-button",
+          })
+          .then(() => {
+            // on close
+          });
+      }
+    },
+    sendFollowData() {
+      this.$axios({
+        url: "/post_star/" + this.newsId,
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
+    },
+    renderPage() {
+      const id = this.$route.query.id;
+      this.videoId = id;
+      //一进页面获取对应文章id，渲染页面；
+      this.$axios({
+        url: "/post/" + this.videoId,
+      })
+        .then((res) => {
+          // console.log(res);
+          this.pageData = res.data.data;
+          this.pageData.content = this.pageData.content.split("?")[0];
+        })
+        .catch((err) => console.log(err));
+    },
+    sendFollowReq() {
+      //获取关注的用户ID,判断有否token,无提示去登录；
+      if (localStorage.getItem("Authorization")) {
+        //若是已经关注了；
+        console.log(this.pageData.has_follow);
+        if (this.pageData.has_follow) {
+          this.$axios({
+            url: "/user_unfollow/" + this.pageData.user.id,
+          }).then((res) => {
+            console.log(res.data.message);
+            if (res.data.message == "取消关注成功") {
+              //修改保存好的关注数据;
+              this.pageData.has_follow = false;
+            }
+          });
+        } else {
+          //没有关注；
+          this.$axios({
+            url: "/user_follows/" + this.pageData.user.id,
+          })
+            .then((res) => {
+              console.log(res.data.message);
+              if (res.data.message == "关注成功") {
+                //修改保存好的关注数据;
+                this.pageData.has_follow = true;
+              }
+            })
+            .catch((err) => console.log(err));
+        }
+      } else {
+        this.$dialog
+          .alert({
+            message: "ログインしてくださいね～",
+            theme: "round-button",
+          })
+          .then(() => {
+            // on close
+          });
+      }
+    },
   },
 };
 </script>
@@ -128,6 +243,10 @@ export default {
       border: 1px solid #ccc;
       border-radius: 15px;
       color: #000;
+      &.followed {
+        border: 1px solid red;
+        color: red;
+      }
     }
   }
 

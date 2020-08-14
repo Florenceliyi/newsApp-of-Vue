@@ -76,6 +76,7 @@ export default {
         console.log(2222);
       } else if (id == 3) {
         //我的收藏
+        this.$router.push("/myCollection");
       } else if (id == 4) {
         //设置
       } else {
