@@ -1,5 +1,5 @@
 <template>
-  <div class="news-detail">
+  <div class="news-detail" @click="getClick">
     <div class="header">
       <i class="arrows iconfont iconjiantou2" @click="goBack"></i>
       <img src="../assets/images/logo.png" alt />
@@ -15,8 +15,8 @@
     </div>
     <div class="news-content" v-html="pageData.content"></div>
     <div class="icons">
-      <a href="javascript:void(0)">
-        <i class="iconfont icondianzan"></i>
+      <a href="javascript:void(0)" @click="addLike">
+        <i class="iconfont icondianzan dianzan" :class="isRed?'active':''"></i>
         {{pageData.like_length}}
       </a>
       <a href="javascript:void(0)">
@@ -33,7 +33,12 @@
       <p>暂无跟帖，抢占沙发</p>
     </div>
     <!-- 这里是攥写评论的子组件 -->
-    <commentsFooter @sendClick="getCollected"></commentsFooter>
+    <commentsFooter
+      @sendClick="getCollected"
+      @sendSonClick="getClick"
+      :isWrittingNow="writeCommits"
+      @clickComents="clickComents"
+    ></commentsFooter>
   </div>
 </template>
 
@@ -48,11 +53,17 @@ export default {
     return {
       pageData: {},
       newsId: 0,
+      userId: 0,
+      isRed: false,
+      //判断输入框是否变大的标识;
+      writeCommits: false,
     };
   },
+
   mounted() {
     // const id = location.hash.split("=")[1];
     //this.$route保存了当前页面路由的所有信息;
+    //渲染页面的ajax请求;
     console.log(this.$route);
     const id = this.$route.query.id;
     this.newsId = id;
@@ -62,6 +73,7 @@ export default {
     }).then((res) => {
       console.log(res);
       this.pageData = res.data.data;
+      this.userId = res.data.data.user.id;
     });
   },
   methods: {
@@ -103,7 +115,7 @@ export default {
         url: "/post_star/" + this.newsId,
       })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
         })
         .catch((err) => console.log(err));
     },
@@ -146,6 +158,39 @@ export default {
             // on close
           });
       }
+    },
+    //点赞文章
+    addLike() {
+      //渲染点赞的ajax请求；
+      this.$axios({
+        url: "/post_like/" + this.newsId,
+      })
+        .then((res) => {
+          if (res.data.message == "点赞成功") {
+            //点赞数应该加1；
+            console.log(res.data.message);
+            this.pageData.like_length++;
+            //修改点赞图标变红;
+            this.isRed = true;
+          } else {
+            //点赞数减1;
+            console.log(res.data.message);
+            this.pageData.like_length--;
+            this.isRed = false;
+          }
+        })
+        .catch((err) => console.log(err));
+    },
+    //点击文章详情页面，下面的子组件会恢复样式;
+    getClick() {
+      console.log("父组件被点击了");
+      this.writeCommits = false;
+    },
+    clickComents() {
+      //子组件传递一个事件给父组件，父组件接收事件，在父组件中修改值，再传回给子组件；
+      //原因：父组件传给子组件的值，不能在子组件中直接修改；
+      console.log("子组件被点击了");
+      this.writeCommits = true;
     },
   },
 };
@@ -224,6 +269,9 @@ export default {
       text-align: center;
       i {
         margin-right: 1vw;
+      }
+      .dianzan.active {
+        color: red;
       }
     }
     & > a:nth-child(1) {

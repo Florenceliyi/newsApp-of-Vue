@@ -1,5 +1,5 @@
 <template>
-  <div class="news-detail">
+  <div class="news-detail" @click="getClick">
     <div class="header">
       <i class="arrows iconfont iconjiantou2" @click="goBack"></i>
       <img src="../assets/images/logo.png" alt />
@@ -29,8 +29,9 @@
 
     <div class="news-content"></div>
     <div class="icons">
-      <a href="javascript:void(0)">
-        <i class="iconfont icondianzan">{{pageData.like_length}}</i>
+      <a href="javascript:void(0)" @click="addLike">
+        <i class="iconfont icondianzan dianzan" :class="isRed?'active':''"></i>
+        {{pageData.like_length}}
       </a>
       <a href="javascript:void(0)">
         <i class="iconfont iconweixin"></i>微信
@@ -46,7 +47,12 @@
       <p>暂无跟帖，抢占沙发</p>
     </div>
     <!-- 这里是写评论的子组件 -->
-    <commentsFooter @sendClick="getCollected"></commentsFooter>
+    <commentsFooter
+      @sendClick="getCollected"
+      @sendSonClick="getClick"
+      :isWrittingNow="writeCommits"
+      @clickComents="clickComents"
+    ></commentsFooter>
   </div>
 </template>
 
@@ -56,8 +62,11 @@ import { log } from "util";
 export default {
   data() {
     return {
-      userId: 0,
       pageData: {},
+      isRed: false,
+      videoId: 0,
+      //判断输入框是否变大的标识;
+      writeCommits: false,
     };
   },
   components: {
@@ -163,6 +172,40 @@ export default {
           });
       }
     },
+    //点赞文章
+    addLike() {
+      //渲染点赞的ajax请求；
+      this.$axios({
+        url: "/post_like/" + this.videoId,
+      })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.message == "点赞成功") {
+            //点赞数应该加1；
+            console.log(res.data.message);
+            this.pageData.like_length++;
+            //修改点赞图标变红;
+            this.isRed = true;
+          } else if (res.data.message == "取消成功") {
+            //点赞数减1;
+            console.log(res.data.message);
+            this.pageData.like_length--;
+            this.isRed = false;
+          }
+        })
+        .catch((err) => console.log(err));
+    },
+    //点击文章详情页面，下面的子组件会恢复样式;
+    getClick() {
+      console.log("父组件被点击了");
+      this.writeCommits = false;
+    },
+    clickComents() {
+      //子组件传递一个事件给父组件，父组件接收事件，在父组件中修改值，再传回给子组件；
+      //原因：父组件传给子组件的值，不能在子组件中直接修改；
+      console.log("子组件被点击了");
+      this.writeCommits = true;
+    },
   },
 };
 </script>
@@ -262,10 +305,16 @@ export default {
       border-radius: 15px;
       border: 1px solid #666;
       text-align: center;
+      .dianzan.active {
+        color: red;
+      }
     }
     & > a:nth-child(1) {
       margin-left: 12vw;
       margin-right: 28vw;
+      i {
+        margin-right: 1vw;
+      }
     }
     & > a:nth-child(2) {
       i {
@@ -285,6 +334,7 @@ export default {
       background: rgb(177, 131, 105);
       top: 3vw;
     }
+
     & > span:nth-child(1) {
       left: 4vw;
     }

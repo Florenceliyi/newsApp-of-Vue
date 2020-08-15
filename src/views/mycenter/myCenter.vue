@@ -29,6 +29,7 @@
         </div>
         <div class="date">{{date}}</div>
       </div>
+      <i class="iconfont iconjiantou2" @click="goBack"></i>
       <router-link to="/mycenter/personalMsg" tag="i" class="arrows iconfont iconjiantou1"></router-link>
     </header>
     <littleComs content="我的关注" detail="关注的用户" @sonIsClicked="jumpTo" id="1"></littleComs>
@@ -99,6 +100,10 @@ export default {
           });
       }
     },
+    goBack() {
+      //回到首页
+      this.$router.push("/home");
+    },
   },
   components: {
     littleComs,
@@ -152,12 +157,12 @@ export default {
     .profile {
       flex: 1;
       div {
-        width: 30vw;
-        height: 30vw;
         border-radius: 50%;
         overflow: hidden;
+        margin-left: 9vw;
         .cat {
           width: 30vw;
+          height: 30vw;
         }
       }
     }
@@ -173,6 +178,12 @@ export default {
       .date {
         color: #666;
       }
+    }
+    .iconjiantou2 {
+      position: absolute;
+      font-size: 22px;
+      left: 2vw;
+      font-weight: bold;
     }
     .arrows {
       position: absolute;

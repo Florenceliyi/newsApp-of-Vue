@@ -1,15 +1,20 @@
 <template>
-  <div class="footer" :class="isShow?'focus_style':''">
+  <div class="footer" :class="isWrittingNow?'focus_style':''" @click.stop="handlerEmit">
     <div class="footer-commit">
-      <textarea name id cols="30" rows="10" placeholder="写跟帖" @focus="onFocus" @blur="onBlur"></textarea>
-      <button v-show="isShow">发送</button>
+      <textarea name id cols="30" rows="10" placeholder="写跟帖" @focus="onFocus"></textarea>
+      <button v-show="isWrittingNow" @click.stop="sendCommits">发送</button>
     </div>
-    <div class="footer-icons" v-show="styleChange">
+    <div class="footer-icons" v-show="!isWrittingNow">
       <i class="iconfont iconpinglun-">
         <b>4</b>
       </i>
-      <span class="star" @click="isClicked" v-text="flag?'★':'☆'" :class="flag?' collected':''"></span>
-      <i class="iconfont iconfenxiang"></i>
+      <span
+        class="star"
+        @click.stop="isClicked"
+        v-text="flag?'★':'☆'"
+        :class="flag?' collected':''"
+      ></span>
+      <i class="iconfont iconfenxiang" @click.stop></i>
     </div>
   </div>
 </template>
@@ -20,12 +25,13 @@ export default {
     return {
       //是否关注标识;
       flag: false,
-      //底部图标是否显现的标识;
-      styleChange: true,
-      //发送按钮,输入框样式是否显现的标识;
-      isShow: false,
+      // //底部图标是否显现的标识;
+      // styleChange: true,
+      // //发送按钮,输入框样式是否显现的标识;
+      // isShow: false,
     };
   },
+  props: ["isWrittingNow"],
   methods: {
     isClicked() {
       this.flag = !this.flag;
@@ -38,11 +44,30 @@ export default {
       this.styleChange = false;
       //获取焦点，发送按钮显示
       this.isShow = true;
+      // this.isWrittingNow = true;
     },
-    onBlur() {
-      //与获取焦点的判断相反；
-      this.styleChange = true;
-      this.isShow = false;
+    // onBlur() {
+    //   //与获取焦点的判断相反；
+    //   this.styleChange = true;
+    //   this.isShow = false;
+    // },
+    sendCommits() {
+      //子组件传递鼠标点击事件给父组件;
+      this.$emit("sendSonClick");
+      //子组件接收到父组件传递的事件，改变输入框的样式;
+
+      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!注意父组件传递过来的值不可以直接改写！！！！！；
+      // this.isWrittingNow = false;
+      console.log(this.isWrittingNow);
+      if (!this.isWrittingNow) {
+        this.styleChange = !this.isWrittingNow;
+        this.isShow = this.isWrittingNow;
+      }
+    },
+
+    handlerEmit() {
+      //子组件接收到父组件传递过来的isWritttingNow数据，子组件再传递一个事件给父组件；
+      this.$emit("clickComents");
     },
   },
 };
