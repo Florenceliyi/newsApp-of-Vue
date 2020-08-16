@@ -25,12 +25,9 @@
     </div>
 
     <!-- 跟帖内容 -->
-    <div class="commit">
-      <span></span>
-      <span></span>
-      <!-- <span class="footer-line"></span> -->
-      <div class="commit-title">精彩跟帖</div>
-      <p>暂无跟帖，抢占沙发</p>
+    <!-- list传递的是文章的评论列表 -->
+    <div v-if="lists[0]">
+      <commentsLists :lists="lists"></commentsLists>
     </div>
     <!-- 这里是攥写评论的子组件 -->
     <commentsFooter
@@ -44,19 +41,24 @@
 
 <script>
 import commentsFooter from "../components/commentsFooter";
-import { log } from "util";
+import commentsLists from "../components/comments/commentsLists";
 export default {
   components: {
     commentsFooter,
+    commentsLists,
   },
   data() {
     return {
       pageData: {},
+      //文章id
       newsId: 0,
+      //用户id
       userId: 0,
       isRed: false,
       //判断输入框是否变大的标识;
       writeCommits: false,
+      //评论列表;
+      lists: [],
     };
   },
 
@@ -74,8 +76,10 @@ export default {
       console.log(res);
       this.pageData = res.data.data;
       this.userId = res.data.data.user.id;
+      this.renderCommentLists();
     });
   },
+
   methods: {
     //点击箭头，回退上一页
     goBack() {
@@ -192,6 +196,18 @@ export default {
       console.log("子组件被点击了");
       this.writeCommits = true;
     },
+    //渲染文章评论列表的方法;
+    renderCommentLists() {
+      this.$axios({
+        url: "/post_comment/" + this.newsId,
+      })
+        .then((res) => {
+          console.log(res.data.data);
+          this.lists = res.data.data;
+          console.log(this.lists);
+        })
+        .catch((err) => console.log(err));
+    },
   },
 };
 </script>
@@ -200,7 +216,7 @@ export default {
 .news-detail {
   position: relative;
   width: 100vw;
-  height: 100%;
+  height: 206vw;
   padding: 0 3vw;
   background: url("../assets/images/webp.jpg") left bottom;
   .header {
@@ -282,41 +298,6 @@ export default {
       i {
         color: #00c800;
       }
-    }
-  }
-  .commit {
-    width: 100%;
-    height: 50vw;
-    margin-top: 3vw;
-    position: relative;
-    span {
-      position: absolute;
-      width: 26vw;
-      height: 1px;
-      background: rgb(177, 131, 105);
-      top: 3vw;
-    }
-    & > span:nth-child(1) {
-      left: 4vw;
-    }
-    & > span:nth-child(2) {
-      right: 3vw;
-    }
-    .footer-line {
-      width: 20vw;
-      height: 1px;
-      bottom: 2vw;
-    }
-    .commit-title {
-      width: 100%;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    p {
-      width: 100%;
-      text-align: center;
-      margin-top: 6vw;
     }
   }
 }

@@ -10,6 +10,7 @@ import follow from '../views/mycenter/follow.vue'
 import newsDetail from '../views/newsDetail.vue'
 import videoDes from '../views/videoDes.vue'
 import myCollection from '../views/mycenter/myCollection.vue'
+import lists from '../components/diguiUse.vue'
 
 
 Vue.use(VueRouter)
@@ -96,6 +97,12 @@ const routes = [{
     path: '/myCollection',
     components: {
       myCollection
+    }
+  },
+  {
+    path: '/diguiUse',
+    components: {
+      lists
     }
   }
 

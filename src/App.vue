@@ -16,6 +16,7 @@
     <router-view name="newsDetail"></router-view>
     <router-view name="videoDes"></router-view>
     <router-view name="myCollection"></router-view>
+    <router-view name="lists"></router-view>
   </div>
 </template>
 

@@ -39,13 +39,7 @@
     </div>
 
     <!-- 跟帖内容 -->
-    <div class="commit">
-      <span></span>
-      <span></span>
-      <!-- <span class="footer-line"></span> -->
-      <div class="commit-title">精彩跟帖</div>
-      <p>暂无跟帖，抢占沙发</p>
-    </div>
+    <commentsLists></commentsLists>
     <!-- 这里是写评论的子组件 -->
     <commentsFooter
       @sendClick="getCollected"
@@ -58,6 +52,7 @@
 
 <script>
 import commentsFooter from "../components/commentsFooter";
+import commentsLists from "../components/comments/commentsLists";
 import { log } from "util";
 export default {
   data() {
@@ -71,6 +66,7 @@ export default {
   },
   components: {
     commentsFooter,
+    commentsLists,
   },
   mounted() {
     this.renderPage();
@@ -213,7 +209,7 @@ export default {
 <style scoped lang='scss'>
 .news-detail {
   width: 100vw;
-  height: 100%;
+  height: 206vw;
   padding: 0 3vw;
   background: url("../assets/images/webp.jpg") left bottom;
   .header {
