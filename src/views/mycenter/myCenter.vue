@@ -74,7 +74,7 @@ export default {
         this.$router.push("/myFollowers");
       } else if (id == 2) {
         //我的跟帖
-        console.log(2222);
+        this.$router.push("/myComments");
       } else if (id == 3) {
         //我的收藏
         this.$router.push("/myCollection");

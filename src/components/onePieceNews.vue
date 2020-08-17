@@ -19,6 +19,7 @@ export default {
   props: ["item"],
   methods: {
     goToNesDes() {
+      //跳转文章详情页，带上文章的id；
       this.$router.push({ path: "/newsDetail", query: { id: this.item.id } });
     },
   },

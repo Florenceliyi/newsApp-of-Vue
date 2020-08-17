@@ -26,8 +26,10 @@
 
     <!-- 跟帖内容 -->
     <!-- list传递的是文章的评论列表 -->
-    <div v-if="lists[0]">
-      <commentsLists :lists="lists"></commentsLists>
+    <commentsLists :lists="lists" @writeComments="showStyle" :writeCommits="writeCommits"></commentsLists>
+    <!-- 更多跟帖按钮，若是数组没有内容不渲染 -->
+    <div class="moreComments" v-if="!lists.length == 0">
+      <button @click="goToMoreComs">更多跟帖</button>
     </div>
     <!-- 这里是攥写评论的子组件 -->
     <commentsFooter
@@ -35,6 +37,9 @@
       @sendSonClick="getClick"
       :isWrittingNow="writeCommits"
       @clickComents="clickComents"
+      @sendShowInput="handlerInput"
+      :parentId="parentId"
+      @reRender="renderCommentLists"
     ></commentsFooter>
   </div>
 </template>
@@ -42,6 +47,7 @@
 <script>
 import commentsFooter from "../components/commentsFooter";
 import commentsLists from "../components/comments/commentsLists";
+import { log } from "util";
 export default {
   components: {
     commentsFooter,
@@ -59,6 +65,10 @@ export default {
       writeCommits: false,
       //评论列表;
       lists: [],
+      //子组件按钮点击，弹窗弹起标识；
+      isPopUp: true,
+      //回复评论id
+      parentId: 0,
     };
   },
 
@@ -66,7 +76,8 @@ export default {
     // const id = location.hash.split("=")[1];
     //this.$route保存了当前页面路由的所有信息;
     //渲染页面的ajax请求;
-    console.log(this.$route);
+    // console.log(this.$route);
+
     const id = this.$route.query.id;
     this.newsId = id;
     //一进页面获取对应文章id，渲染页面；
@@ -81,6 +92,11 @@ export default {
   },
 
   methods: {
+    handlerInput(val) {
+      console.log("接收子组件传过来的writeCommits:" + val);
+      this.writeCommits = val;
+      console.log("修改writeCommits：" + val);
+    },
     //点击箭头，回退上一页
     goBack() {
       this.$router.back();
@@ -208,6 +224,19 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    //点击更多跟帖按钮，跳转跟帖页面;
+    goToMoreComs() {
+      this.newsId = this.$route.query.id;
+      this.$router.push({ path: "/moreComments", query: { id: this.newsId } });
+    },
+    //子组件点击回复按钮传给父组件响应;
+    showStyle(show, parentId) {
+      //传回给底部条子组件;
+      this.writeCommits = show;
+      console.log("writeCommits:" + this.writeCommits);
+      //保存回复子组件传递过来的用户Id
+      this.parentId = parentId;
+    },
   },
 };
 </script>
@@ -298,6 +327,18 @@ export default {
       i {
         color: #00c800;
       }
+    }
+  }
+  .moreComments {
+    position: relative;
+    bottom: 40vw;
+    text-align: center;
+    margin-top: 5vw;
+    button {
+      width: 22vw;
+      height: 12vw;
+      border-radius: 15px;
+      background: #f97979;
     }
   }
 }

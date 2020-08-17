@@ -17,6 +17,8 @@
     <router-view name="videoDes"></router-view>
     <router-view name="myCollection"></router-view>
     <router-view name="lists"></router-view>
+    <router-view name="myComments"></router-view>
+    <router-view name="moreComments"></router-view>
   </div>
 </template>
 

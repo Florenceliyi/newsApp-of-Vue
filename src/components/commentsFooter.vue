@@ -1,7 +1,18 @@
 <template>
   <div class="footer" :class="isWrittingNow?'focus_style':''" @click.stop="handlerEmit">
     <div class="footer-commit">
-      <textarea name id cols="30" rows="10" placeholder="写跟帖" @focus="onFocus"></textarea>
+      <!-- 弹窗显示 -->
+      <textarea
+        v-if="isWrittingNow"
+        placeholder="写跟帖"
+        @click.stop="clickEmit"
+        @focus="onFocus"
+        ref="textareaInput"
+        v-model="inputVal"
+        v-focus
+      ></textarea>
+      <!-- 弹窗不显示 -->
+      <textarea v-if="!isWrittingNow" @click="clickEmit" type="text" placeholder="写跟帖" />
       <button v-show="isWrittingNow" @click.stop="sendCommits">发送</button>
     </div>
     <div class="footer-icons" v-show="!isWrittingNow">
@@ -20,18 +31,25 @@
 </template>
 
 <script>
+import { log } from "util";
 export default {
   data() {
     return {
       //是否关注标识;
       flag: false,
-      // //底部图标是否显现的标识;
-      // styleChange: true,
-      // //发送按钮,输入框样式是否显现的标识;
-      // isShow: false,
+      inputVal: "",
     };
   },
-  props: ["isWrittingNow"],
+  props: ["isWrittingNow", "parentId"],
+  directives: {
+    focus: {
+      // 这里的el就是被绑定指令的那个元素
+      inserted: function (el) {
+        el.focus();
+      },
+    },
+  },
+  mounted() {},
   methods: {
     isClicked() {
       this.flag = !this.flag;
@@ -39,12 +57,16 @@ export default {
       this.$emit("sendClick", this.flag);
       //修改图标颜色变黄；
     },
+    clickEmit() {
+      console.log("向父组件传递自定义事件：" + this.isWrittingNow);
+      this.$emit("sendShowInput", this.isWrittingNow);
+    },
+
     onFocus() {
       //获取焦点，图标不显示;
-      this.styleChange = false;
+      this.styleChange = this.isWrittingNow;
       //获取焦点，发送按钮显示
-      this.isShow = true;
-      // this.isWrittingNow = true;
+      this.isShow = !this.isWrittingNow;
     },
     // onBlur() {
     //   //与获取焦点的判断相反；
@@ -63,6 +85,27 @@ export default {
         this.styleChange = !this.isWrittingNow;
         this.isShow = this.isWrittingNow;
       }
+      //判断data是否有parentId；
+      console.log(this.parentId);
+      let data = { content: this.inputVal };
+      if (this.parentId) {
+        data.parent_id = this.parentId;
+      }
+      //发布评论的ajax请求;
+      this.$axios({
+        url: "/post_comment/" + this.$route.query.id,
+        //method不能加s
+        method: "post",
+        data,
+      })
+        .then((res) => {
+          console.log(res);
+          //发布成功后清空输入框;
+          this.inputVal = "";
+          //通知父组件需要重新渲染页面;
+          this.$emit("reRender");
+        })
+        .catch((err) => console.log(err));
     },
 
     handlerEmit() {

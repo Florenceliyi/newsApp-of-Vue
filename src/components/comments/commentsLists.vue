@@ -3,11 +3,10 @@
     <div class="commit">
       <span></span>
       <span></span>
-
       <!-- 没有回复时显示此html结构 -->
       <div class="no-reply" v-if="lists && lists.length == 0">
         <div class="commit-title">コメントリスト</div>
-        <p>コメント一つもないよ～</p>
+        <p class="no_comments">コメント一つもないよ～</p>
       </div>
     </div>
     <!-- 有回复时的结构 -->
@@ -22,12 +21,23 @@
           </div>
           <div class="middle">
             <p class="name">{{item.user.nickname}}</p>
-            <p class="time">三時間前</p>
+            <p class="time">
+              {{ item.create_date.split("T")[0] +
+              " " +
+              item.create_date.split("T")[1].split(".")[0]}}
+            </p>
           </div>
-          <button class="huifu">返事</button>
+          <!-- 需要阻止事件冒泡 -->
+          <button class="huifu" @click.stop="writeComments(item.id)">返事</button>
         </div>
         <div class="content">{{item.content}}</div>
-        <replyComs :commentLists="item.parent" v-if="item.parent"></replyComs>
+        <!-- 回复的子组件 -->
+        <replyComs
+          :commentLists="item.parent"
+          v-if="item.parent"
+          :writeCommits="writeCommits"
+          @writeComments="writeComments"
+        ></replyComs>
       </div>
     </div>
   </div>
@@ -39,12 +49,31 @@ export default {
   components: {
     replyComs,
   },
-  props: ["lists"],
+  data() {
+    return {
+      newsId: 0,
+      //弹窗不弹起，样式不改变
+      isShow: false,
+    };
+  },
+  props: ["lists", "writeCommits"],
 
   mounted() {
     console.log(this.lists);
   },
-  methods: {},
+  methods: {
+    //子组件回复按钮点击，触发传递给父组件;
+    writeComments(userId) {
+      //样式取反
+      this.isShow = !this.writeCommits;
+      //子组件传递样式改变的变量给父组件;
+      this.$emit("writeComments", this.isShow, userId);
+
+      //回复第一层的评论的逻辑;
+      //若是有parentId,带上parentId传给父组件;
+      console.log(userId);
+    },
+  },
 };
 </script>
 
@@ -77,18 +106,18 @@ export default {
     text-align: center;
     font-size: 20px;
     font-weight: bold;
-    p {
-      width: 100%;
-      text-align: center;
-      margin-top: 6vw;
-    }
+  }
+  .no_comments {
+    width: 100%;
+    text-align: center;
+    margin-top: 6vw;
   }
 }
 .main_comments {
-  width: 100vw;
+  width: 100%;
   border-bottom: 1px solid #ccc;
   overflow: hidden;
-  margin-top: 4vw;
+  margin-top: 10vw;
   padding-bottom: 50vw;
   .reply {
     width: 100%;
@@ -101,6 +130,9 @@ export default {
     .all {
       display: flex;
       justify-content: left;
+      .name {
+        font-weight: bold;
+      }
 
       button {
         width: 10vw;
@@ -126,7 +158,7 @@ export default {
     }
     .huifu {
       font-size: 14px;
-      margin-left: 55vw;
+      margin-left: 45vw;
       margin-top: 3vw;
     }
   }

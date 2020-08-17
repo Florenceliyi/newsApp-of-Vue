@@ -11,7 +11,8 @@ import newsDetail from '../views/newsDetail.vue'
 import videoDes from '../views/videoDes.vue'
 import myCollection from '../views/mycenter/myCollection.vue'
 import lists from '../components/diguiUse.vue'
-
+import myComments from '../views/mycenter/myComments.vue'
+import moreComments from '../views/moreComments.vue'
 
 Vue.use(VueRouter)
 
@@ -93,18 +94,35 @@ const routes = [{
       videoDes
     }
   },
+  //我的收藏页面
   {
     path: '/myCollection',
     components: {
       myCollection
     }
   },
+  //精彩跟帖页面
+  {
+    path: '/myComments',
+    components: {
+      myComments
+    }
+  },
+  //更多跟帖页面
+  {
+    path: '/moreComments',
+    components: {
+      moreComments
+    }
+  },
+  //递归练习页面
   {
     path: '/diguiUse',
     components: {
       lists
     }
-  }
+  },
+
 
 
 
