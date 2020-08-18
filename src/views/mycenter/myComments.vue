@@ -4,16 +4,16 @@
       我的跟帖
       <i class="iconfont iconjiantou2" @click="goback"></i>
     </header>
-    <div class="comments_content">
-      <i class="iconfont iconjiantou1"></i>
-      <p class="time">2020-8-17 20:50</p>
+    <div class="comments_content" v-for="(item) in userCommits" :key="item.id">
+      <i class="iconfont iconjiantou1" @click="$router.push('/newsDetail/?id='+ item.post.id)"></i>
+      <p class="time">{{item.create_date.split("T")[0]}}</p>
       <!-- 回复的内容 -->
-      <div class="inner-comments">
-        <p class="user">回复：火星人</p>
-        <p class="reply">阿信是张信哲吗？张信哲是张学友弟弟？</p>
+      <div class="inner-comments" v-if="item.parent">
+        <p class="user">回复：{{item.parent.user.nickname}}</p>
+        <p class="reply">{{item.parent.content}}</p>
       </div>
-      <p class="title">不是</p>
-      <div class="origin-news">原文：设计的附件是老款的放假啦空手道解放了是JFK事件发生觉得分厘卡撒酒疯的</div>
+      <p class="title">{{item.content}}</p>
+      <div class="newsSource">原文：{{item.post.title}}</div>
     </div>
   </div>
 </template>
@@ -42,6 +42,7 @@ export default {
         url: "/user_comments",
       })
         .then((res) => {
+          console.log(res);
           this.userCommits = res.data.data;
           console.log(this.userCommits);
         })
@@ -73,20 +74,41 @@ export default {
   }
   .comments_content {
     width: 100%;
-    height: 30vw;
-    padding: 4vw;
+    padding: 5vw 5vw 11vw;
     position: relative;
+    border-bottom: 1px solid #ccc;
     i {
       position: absolute;
-      right: 1vw;
+      right: 6vw;
       bottom: 2vw;
+      font-weight: bold;
+      font-size: 20px;
     }
     .time {
-      color: #ccc;
+      color: #666;
+      margin-bottom: 3vw;
     }
     .inner-comments {
+      width: 100%;
+      padding: 5vw;
+      height: 25vw;
+      background: #f2f2f2;
       font-size: 14px;
-      color: #ccc;
+      color: #888;
+      .user {
+        margin-bottom: 4vw;
+      }
+    }
+    .title {
+      margin: 4vw 0;
+      font-size: 18px;
+    }
+    .newsSource {
+      width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      color: #666;
     }
   }
 }
