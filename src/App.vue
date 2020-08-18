@@ -19,6 +19,7 @@
     <router-view name="lists"></router-view>
     <router-view name="myComments"></router-view>
     <router-view name="moreComments"></router-view>
+    <router-view name="search"></router-view>
   </div>
 </template>
 

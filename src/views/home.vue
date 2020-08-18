@@ -6,7 +6,7 @@
         <a href="#" class="logo"></a>
         <div class="search">
           <i class="iconfont iconsearch"></i>
-          <input type="text" placeholder="搜索新闻" />
+          <input type="text" placeholder="搜索新闻" @focus="$router.push('/search')" />
         </div>
         <a href="/#/mycenter" class="login iconfont iconwode"></a>
       </div>

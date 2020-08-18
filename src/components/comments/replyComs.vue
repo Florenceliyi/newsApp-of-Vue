@@ -8,7 +8,10 @@
           <span>{{commentLists.user.nickname}}</span>
         </div>
         <div class="time">{{timeFormate}}</div>
-        <button class="btnReply" @click.stop="popUpInput(commentLists.id)">返事</button>
+        <button
+          class="btnReply"
+          @click.stop="popUpInput(commentLists.id,commentLists.user.nickname)"
+        >返事</button>
       </div>
       <div class="content">{{commentLists.content}}</div>
 
@@ -59,11 +62,11 @@ export default {
     },
   },
   methods: {
-    popUpInput(parentId) {
+    popUpInput(parentId, nickname) {
       //   this.isShow = !this.writeCommits;
       //给子元素传递partentId
-      console.log(parentId);
-      this.$emit("writeComments", parentId);
+      console.log(parentId, nickname);
+      this.$emit("writeComments", parentId, nickname);
     },
   },
 };

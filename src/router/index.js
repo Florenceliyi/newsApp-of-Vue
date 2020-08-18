@@ -13,6 +13,7 @@ import myCollection from '../views/mycenter/myCollection.vue'
 import lists from '../components/diguiUse.vue'
 import myComments from '../views/mycenter/myComments.vue'
 import moreComments from '../views/moreComments.vue'
+import search from '../views/search.vue'
 
 Vue.use(VueRouter)
 
@@ -113,6 +114,12 @@ const routes = [{
     path: '/moreComments',
     components: {
       moreComments
+    }
+  },
+  {
+    path: '/search',
+    components: {
+      search
     }
   },
   //递归练习页面

@@ -28,7 +28,7 @@
             </p>
           </div>
           <!-- 需要阻止事件冒泡 -->
-          <button class="huifu" @click.stop="writeComments(item.id)">返事</button>
+          <button class="huifu" @click.stop="writeComments(item.id,item.user.nickname)">返事</button>
         </div>
         <div class="content">{{item.content}}</div>
         <!-- 回复的子组件 -->
@@ -63,15 +63,16 @@ export default {
   },
   methods: {
     //子组件回复按钮点击，触发传递给父组件;
-    writeComments(userId) {
+    writeComments(userId, nickname) {
       //样式取反
       this.isShow = !this.writeCommits;
       //子组件传递样式改变的变量给父组件;
-      this.$emit("writeComments", this.isShow, userId);
+      this.$emit("writeComments", this.isShow, userId, nickname);
 
       //回复第一层的评论的逻辑;
       //若是有parentId,带上parentId传给父组件;
       console.log(userId);
+      console.log(nickname);
     },
   },
 };
