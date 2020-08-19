@@ -14,6 +14,7 @@ import lists from '../components/diguiUse.vue'
 import myComments from '../views/mycenter/myComments.vue'
 import moreComments from '../views/moreComments.vue'
 import search from '../views/search.vue'
+import tagManagement from '../views/mycenter/tagManagement.vue'
 
 Vue.use(VueRouter)
 
@@ -120,6 +121,12 @@ const routes = [{
     path: '/search',
     components: {
       search
+    }
+  },
+  {
+    path: '/tagManagement',
+    components: {
+      tagManagement
     }
   },
   //递归练习页面

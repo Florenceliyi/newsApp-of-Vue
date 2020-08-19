@@ -144,11 +144,14 @@ export default {
         .catch((err) => console.log(err));
     },
     renderTabLists() {
-      //进来加载栏目列表信息;
-      this.$axios({
-        url: "/category",
-      }).then((res) => {
-        //11111111111.2将所有需要用到的数据包装成一个数组，方便后面渲染文章列表可以获取到
+      //进来加载栏目列表信息,若是有本地栏目数据，则加载本地栏目数据;
+      if (localStorage.getItem("ownedChannels")) {
+        //制造res.data.data的响应返回的数据形式;
+        const res = {
+          data: {
+            data: JSON.parse(localStorage.getItem("ownedChannels")),
+          },
+        };
         const newLoadingData = res.data.data.map((item) => {
           //return返回一个修改包装后的新的数组，保存了vant瀑布流插件要用到的loading、finished属性；
           //postList用于拼接当前栏目的数据，后面需要多加载一页的加数据，拼接到这里;
@@ -162,10 +165,31 @@ export default {
           };
         });
         this.categoryLists = newLoadingData;
-
-        //11111111111.3进来加载栏目完毕后，调用调用第0个返回数据的文章列表对象，渲染文章列表；
         this.renderArticles();
-      });
+      } else {
+        this.$axios({
+          url: "/category",
+        }).then((res) => {
+          //11111111111.2将所有需要用到的数据包装成一个数组，方便后面渲染文章列表可以获取到
+          const newLoadingData = res.data.data.map((item) => {
+            //return返回一个修改包装后的新的数组，保存了vant瀑布流插件要用到的loading、finished属性；
+            //postList用于拼接当前栏目的数据，后面需要多加载一页的加数据，拼接到这里;
+            return {
+              ...item,
+              postList: [],
+              pageIndex: 1,
+              pageSize: 4,
+              loading: false,
+              finished: false,
+            };
+          });
+          this.categoryLists = newLoadingData;
+          console.log(this.categoryLists);
+
+          //11111111111.3进来加载栏目完毕后，调用调用第0个返回数据的文章列表对象，渲染文章列表；
+          this.renderArticles();
+        });
+      }
     },
     getMorePages() {
       //333333333333333333.1    首先获取当前栏目对应的数据;
