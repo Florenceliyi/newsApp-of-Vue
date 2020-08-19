@@ -35,7 +35,7 @@
     <littleComs content="我的关注" detail="关注的用户" @sonIsClicked="jumpTo" id="1"></littleComs>
     <littleComs content="我的跟帖" detail="跟帖/回复" @sonIsClicked="jumpTo" id="2"></littleComs>
     <littleComs content="我的收藏" detail="文章/视频" @sonIsClicked="jumpTo" id="3"></littleComs>
-    <littleComs content="设置" @sonIsClicked="jumpTo" id="4"></littleComs>
+    <littleComs content="栏目管理" @sonIsClicked="jumpTo" id="4"></littleComs>
     <littleComs content="退出登录" @sonIsClicked="jumpTo" id="5"></littleComs>
 
     <!-- 编辑页面的弹窗组件 -->
@@ -79,7 +79,8 @@ export default {
         //我的收藏
         this.$router.push("/myCollection");
       } else if (id == 4) {
-        //设置
+        //栏目管理
+        this.$router.push("/tagManagement");
       } else {
         //退出登录
         /*1.点击确认，清理token信息，点击取消，则不清理2.跳转回首页*/

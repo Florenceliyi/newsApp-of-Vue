@@ -38,12 +38,14 @@ export default {
   watch: {
     ownedChannelLists() {
       //将栏目存放到本地储存,监听栏目的变化；
+      console.log(this.ownedChannelLists);
       localStorage.setItem(
         "ownedChannels",
         JSON.stringify(this.ownedChannelLists)
       );
     },
     addChannelLists() {
+      console.log(this.addChannelLists);
       localStorage.setItem("addChannels", JSON.stringify(this.addChannelLists));
     },
   },
@@ -53,12 +55,10 @@ export default {
       localStorage.getItem("ownedChannels") &&
       localStorage.getItem("addChannels")
     ) {
-      this.ownedChannelLists = JSON.stringify(
+      this.ownedChannelLists = JSON.parse(
         localStorage.getItem("ownedChannels")
       );
-      this.addChannelLists = JSON.stringify(
-        localStorage.getItem("addChannels")
-      );
+      this.addChannelLists = JSON.parse(localStorage.getItem("addChannels"));
     } else {
       //发送栏目数据请求;
       this.$axios({

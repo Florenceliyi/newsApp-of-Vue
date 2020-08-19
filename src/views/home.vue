@@ -114,6 +114,7 @@ export default {
       //2222222222222222.首先获取对应栏目的文章数据;
       const currentCategory = this.categoryLists[this.tabIndex];
       console.log(currentCategory);
+
       this.$axios({
         url: "/post",
         params: {
@@ -147,11 +148,13 @@ export default {
       //进来加载栏目列表信息,若是有本地栏目数据，则加载本地栏目数据;
       if (localStorage.getItem("ownedChannels")) {
         //制造res.data.data的响应返回的数据形式;
+        console.log(JSON.parse(localStorage.getItem("ownedChannels")));
         const res = {
           data: {
             data: JSON.parse(localStorage.getItem("ownedChannels")),
           },
         };
+        console.log(res.data.data);
         const newLoadingData = res.data.data.map((item) => {
           //return返回一个修改包装后的新的数组，保存了vant瀑布流插件要用到的loading、finished属性；
           //postList用于拼接当前栏目的数据，后面需要多加载一页的加数据，拼接到这里;
@@ -165,6 +168,7 @@ export default {
           };
         });
         this.categoryLists = newLoadingData;
+        console.log(this.categoryLists);
         this.renderArticles();
       } else {
         this.$axios({
