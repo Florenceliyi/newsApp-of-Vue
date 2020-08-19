@@ -55,7 +55,7 @@ export default {
     fewNews,
     videoNews,
   },
-  created() {
+  mounted() {
     if (this.inputVal == "") {
       this.placeholder = "搜索新闻";
     }
@@ -63,12 +63,10 @@ export default {
     if (localStorage.getItem("history")) {
       //重新转换成数组
       this.history = JSON.parse(localStorage.getItem("history"));
+      //取出数组最后一个值，渲染搜索结果页面；
+      this.inputVal = history[history.length - 1];
+      this.search();
     }
-    //根据历史搜索的记录渲染搜索页面;
-    const history = JSON.parse(localStorage.getItem("history"));
-    //取出数组最后一个值，渲染搜索结果页面；
-    this.inputVal = history[history.length - 1];
-    this.search();
   },
   directives: {
     focus: {
@@ -107,6 +105,9 @@ export default {
   methods: {
     //搜索文章
     search() {
+      if (this.inputVal == null) {
+        return;
+      }
       this.$axios({
         url: "/post_search",
         params: {
