@@ -1,8 +1,8 @@
 <template >
   <div class="news-content" v-if="item.type == 2 && item.cover.length ==1 && item.cover[0].url">
     <div class="videos">
-      <div class="mask" v-show="isShow">
-        <div class="play" @click="clicked">
+      <div class="mask" v-show="isShow" @click="clicked">
+        <div class="play">
           <i class="iconfont iconshipin"></i>
         </div>
       </div>

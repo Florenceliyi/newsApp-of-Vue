@@ -25,6 +25,18 @@ Vue.prototype.$axios = axios;
 //axios基准地址
 axios.defaults.baseURL = 'http://127.0.0.1:3000';
 
+// 创建一个修复图片地址的全局过滤器
+Vue.filter('fixImgUrl', function (url) {
+  console.log(url);
+
+  const fullUrlReg = /^http/;
+  if (fullUrlReg.test(url)) {
+    return url
+  } else {
+    return axios.defaults.baseURL + url
+  }
+})
+
 
 // 路由守卫,所有的跳转都会被拦截经过这里；
 router.beforeEach((to, from, next) => {
@@ -58,8 +70,6 @@ router.beforeEach((to, from, next) => {
       return router.push("/login").catch(err => console.log(err))
     }
   }
-
-  // Vue.prototype.$axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
   next();
 })

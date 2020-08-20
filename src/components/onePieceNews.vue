@@ -2,8 +2,8 @@
   <div class="news-content" @click="goToNesDes" v-if="item.type == 1 && item.cover.length ==1 ">
     <div class="news">
       <div class="title">{{item.title}}</div>
-      <div class="news-img">
-        <img :src="item.cover[0].url" alt />
+      <div class="news-img" v-if="item.cover[0]">
+        <img :src="item.cover[0].url | formartStr " alt />
       </div>
     </div>
     <p class="des">
@@ -17,6 +17,16 @@
 import { log } from "util";
 export default {
   props: ["item"],
+  filters: {
+    formartStr(value) {
+      const reg = /^http/;
+      if (reg.test(value)) {
+        return value;
+      } else {
+        return "http://127.0.0.1:3000" + value;
+      }
+    },
+  },
   methods: {
     goToNesDes() {
       //跳转文章详情页，带上文章的id；

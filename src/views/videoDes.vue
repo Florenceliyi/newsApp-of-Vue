@@ -39,13 +39,21 @@
     </div>
 
     <!-- 跟帖内容 -->
-    <commentsLists></commentsLists>
-    <!-- 这里是写评论的子组件 -->
+    <!-- list传递的是文章的评论列表 -->
+    <commentsLists :lists="lists" @writeComments="showStyle" :writeCommits="writeCommits"></commentsLists>
+    <!-- 更多跟帖按钮，若是数组没有内容不渲染 -->
+    <div class="moreComments" v-if="!lists.length == 0">
+      <button @click="goToMoreComs">更多跟帖</button>
+    </div>
+    <!-- 这里是攥写评论的子组件 -->
     <commentsFooter
       @sendClick="getCollected"
       @sendSonClick="getClick"
       :isWrittingNow="writeCommits"
       @clickComents="clickComents"
+      @sendShowInput="handlerInput"
+      :parentId="parentId"
+      @reRender="renderCommentLists"
     ></commentsFooter>
   </div>
 </template>
@@ -58,10 +66,19 @@ export default {
   data() {
     return {
       pageData: {},
-      isRed: false,
+      //文章id
       videoId: 0,
+      //用户id
+      userId: 0,
+      isRed: false,
       //判断输入框是否变大的标识;
       writeCommits: false,
+      //评论列表;
+      lists: [],
+      //子组件按钮点击，弹窗弹起标识；
+      isPopUp: true,
+      //回复评论id
+      parentId: 0,
     };
   },
   components: {
@@ -69,7 +86,19 @@ export default {
     commentsLists,
   },
   mounted() {
-    this.renderPage();
+    const id = this.$route.query.id;
+    this.videoId = id;
+    //一进页面获取对应文章id，渲染页面；
+    this.$axios({
+      url: "/post/" + this.videoId,
+    }).then((res) => {
+      console.log(1111111111);
+      console.log(res);
+      this.pageData = res.data.data;
+      this.userId = res.data.data.user.id;
+      this.renderCommentLists();
+    });
+    // this.renderPage();
   },
   methods: {
     //点击箭头，回退上一页
@@ -85,10 +114,11 @@ export default {
         if (hasFollowed) {
           //没有关注时；
           this.$axios({
-            url: "/post_star/" + this.newsId,
+            url: "/post_star/" + this.videoId,
           })
             .then((res) => {
               console.log(res);
+              this.$toast("关注成功");
             })
             .catch((err) => console.log(err));
         } else {
@@ -107,10 +137,11 @@ export default {
     },
     sendFollowData() {
       this.$axios({
-        url: "/post_star/" + this.newsId,
+        url: "/post_star/" + this.videoId,
       })
         .then((res) => {
           console.log(res);
+          this.$toast("取消关注成功");
         })
         .catch((err) => console.log(err));
     },
@@ -202,6 +233,37 @@ export default {
       console.log("子组件被点击了");
       this.writeCommits = true;
     },
+    //接收子组件传过来的数据；
+    handlerInput(val) {
+      console.log("接收子组件传过来的writeCommits:" + val);
+      this.writeCommits = val;
+      console.log("修改writeCommits：" + val);
+    },
+    //渲染文章评论列表的方法;
+    renderCommentLists() {
+      this.$axios({
+        url: "/post_comment/" + this.videoId,
+      })
+        .then((res) => {
+          console.log(res.data.data);
+          this.lists = res.data.data;
+          console.log(this.lists);
+        })
+        .catch((err) => console.log(err));
+    },
+    //点击更多跟帖按钮，跳转跟帖页面;
+    goToMoreComs() {
+      this.videoId = this.$route.query.id;
+      this.$router.push({ path: "/moreComments", query: { id: this.videoId } });
+    },
+    //子组件点击回复按钮传给父组件响应;
+    showStyle(show, parentId) {
+      //传回给底部条子组件;
+      this.writeCommits = show;
+      console.log("writeCommits:" + this.writeCommits);
+      //保存回复子组件传递过来的用户Id
+      this.parentId = parentId;
+    },
   },
 };
 </script>
@@ -209,7 +271,7 @@ export default {
 <style scoped lang='scss'>
 .news-detail {
   width: 100vw;
-  height: 206vw;
+  height: 100%;
   padding: 0 3vw;
   background: url("../assets/images/webp.jpg") left bottom;
   .header {
@@ -352,6 +414,18 @@ export default {
       width: 100%;
       text-align: center;
       margin-top: 6vw;
+    }
+  }
+  .moreComments {
+    position: relative;
+    bottom: 40vw;
+    text-align: center;
+    margin-top: 5vw;
+    button {
+      width: 22vw;
+      height: 12vw;
+      border-radius: 15px;
+      background: #f97979;
     }
   }
 }

@@ -2,7 +2,7 @@
   <div class="news-content" @click="goToNesDes" v-if="item.type ==1 && item.cover.length == 3">
     <div class="title">{{item.title}}</div>
     <div class="images">
-      <img v-for="(value, key) in item.cover" :key="key" :src="value.url" alt />
+      <img v-for="(value, key) in item.cover" :key="key" :src="value.url | formartStr" alt />
     </div>
     <div class="source">
       <span>{{item.user.nickname}}</span>
@@ -14,7 +14,16 @@
 <script>
 export default {
   props: ["item"],
-  mounted() {},
+  filters: {
+    formartStr(value) {
+      const reg = /^http/;
+      if (reg.test(value)) {
+        return value;
+      } else {
+        return "http://127.0.0.1:3000" + value;
+      }
+    },
+  },
   methods: {
     goToNesDes() {
       this.$router.push({ path: "/newsDetail", query: { id: this.item.id } });

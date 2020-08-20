@@ -92,6 +92,7 @@ export default {
   },
 
   methods: {
+    //接收子组件传过来的数据；
     handlerInput(val) {
       console.log("接收子组件传过来的writeCommits:" + val);
       this.writeCommits = val;
@@ -114,6 +115,7 @@ export default {
           })
             .then((res) => {
               console.log(res);
+              this.$toast("关注成功");
             })
             .catch((err) => console.log(err));
         } else {
@@ -136,9 +138,11 @@ export default {
       })
         .then((res) => {
           // console.log(res);
+          this.$toast("取消关注成功");
         })
         .catch((err) => console.log(err));
     },
+    //发送关注的请求;
     sendFollowReq() {
       //获取关注的用户ID,判断有否token,无提示去登录；
       if (localStorage.getItem("Authorization")) {
