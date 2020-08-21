@@ -4,6 +4,7 @@
       我的收藏
       <i class="iconfont iconjiantou2" @click="goback"></i>
     </header>
+    <div class="no_content" v-if="pageData.length == 0">コレクションまだないよ～～</div>
     <!-- 判断是哪一种子组件进行渲染 -->
     <div class="news-content" v-for="(item,index) in pageData" :key="index">
       <oneNews v-if="item.type == 1 && item.cover.length >=1 && item.cover.length < 3" :item="item"></oneNews>
@@ -73,6 +74,12 @@ export default {
       left: 4vw;
       transform: translateY(-50%);
     }
+  }
+  .no_content {
+    text-align: center;
+    font-weight: bold;
+    font-size: 22px;
+    margin: 5vw;
   }
 }
 </style>

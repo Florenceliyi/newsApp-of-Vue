@@ -40,7 +40,7 @@
 
     <!-- 编辑页面的弹窗组件 -->
     <van-popup v-model="show">
-      <personal></personal>
+      <personal @reRender="renderPage"></personal>
     </van-popup>
   </div>
 </template>
@@ -51,6 +51,11 @@ import littleComs from "../../components/littleComs";
 import personal from "./personalMsg";
 // Vue.use(Popup);
 export default {
+  components: {
+    littleComs,
+    personal,
+  },
+
   data() {
     return {
       //性别标识
@@ -64,6 +69,12 @@ export default {
       //编辑资料的弹出框显示;
       show: false,
     };
+  },
+  mounted() {
+    //页面一加载需要渲染页面信息;
+    // console.log(localStorage.getItem("id"));
+    // console.log(Vue.baseURL + "/user/:" + localStorage.getItem("id"));
+    this.renderPage();
   },
   methods: {
     //点击组件跳转页面方法；
@@ -105,38 +116,34 @@ export default {
       //回到首页
       this.$router.push("/home");
     },
-  },
-  components: {
-    littleComs,
-    personal,
+    //渲染页面；
+    renderPage() {
+      this.$axios({
+        //JWT标准 json web token
+        url: "/user/" + localStorage.getItem("id"),
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("Authorization"),
+        },
+      })
+        .then((res) => {
+          //获取成功渲染数据到页面;
+          if (res.status == 200) {
+            this.username = res.data.data.username;
+            this.headImg = res.data.data.head_img;
+            //取出T前的日期
+            this.date = res.data.data.create_date.split("T")[0];
+          }
+        })
+        .catch((err) => console.log(err));
+    },
   },
 
-  mounted() {
-    //页面一加载需要渲染页面信息;
-    // console.log(localStorage.getItem("id"));
-    // console.log(Vue.baseURL + "/user/:" + localStorage.getItem("id"));
-    this.$axios({
-      //JWT标准 json web token
-      url: "/user/" + localStorage.getItem("id"),
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("Authorization"),
-      },
-    })
-      .then((res) => {
-        //获取成功渲染数据到页面;
-        if (res.status == 200) {
-          this.username = res.data.data.username;
-          this.headImg = res.data.data.head_img;
-          //取出T前的日期
-          this.date = res.data.data.create_date.split("T")[0];
-        }
-      })
-      .catch((err) => console.log(err));
-  },
-  //
   beforeRouteUpdate(to, from, next) {
-    console.log(to);
+    //监听路由跳转从编辑页跳转过来，渲染页面；
     console.log(from);
+    if (from.path == "/mycenter/personalMsg") {
+      this.renderPage();
+    }
     next();
   },
 };
@@ -164,6 +171,7 @@ export default {
         .cat {
           width: 30vw;
           height: 30vw;
+          object-fit: cover;
         }
       }
     }

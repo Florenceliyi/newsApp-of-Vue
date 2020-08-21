@@ -4,6 +4,9 @@
       我的跟帖
       <i class="iconfont iconjiantou2" @click="goback"></i>
     </header>
+    <!-- 没有评论时 -->
+    <div class="no_content" v-if="userCommits.length == 0">書き付けまだないよ～～</div>
+    <!-- 有评论时 -->
     <div class="comments_content" v-for="(item) in userCommits" :key="item.id">
       <i class="iconfont iconjiantou1" @click="$router.push('/newsDetail/?id='+ item.post.id)"></i>
       <p class="time">{{item.create_date.split("T")[0]}}</p>
@@ -110,6 +113,12 @@ export default {
       overflow: hidden;
       color: #666;
     }
+  }
+  .no_content {
+    text-align: center;
+    font-weight: bold;
+    font-size: 22px;
+    margin: 5vw;
   }
 }
 </style>

@@ -64,6 +64,8 @@ export default {
     },
     //回退到个人中心页；
     goBack() {
+      //回去个人中心前，提醒个人中心父组件刷新渲染页面;
+      this.$emit("reRender");
       this.$router.back();
     },
     //可以允许修改编辑
@@ -187,6 +189,8 @@ export default {
           overflow: hidden;
           .cat {
             width: 30vw;
+            height: 30vw;
+            object-fit: cover;
           }
         }
       }

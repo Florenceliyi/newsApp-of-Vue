@@ -10,7 +10,7 @@
       </span>-->
       <video
         v-if="pageData.cover"
-        src="https://video.pearvideo.com/mp4/adshort/20200421/cont-1670293-15098199_adpkg-ad_hd.mp4"
+        :src="pageData.content"
         controls
         :poster="pageData.cover[0].url"
         ref="video"
@@ -92,10 +92,18 @@ export default {
     this.$axios({
       url: "/post/" + this.videoId,
     }).then((res) => {
-      console.log(1111111111);
-      console.log(res);
       this.pageData = res.data.data;
+      //正则表达式匹配取出iframe标签中的视频地址；
+      let test = res.data.data.content;
+      //match匹配返回的是一个数组；
+      test = test.match(/src=[\'\"]?([^\'\"]*)[\'\"]?/i);
+      console.log(test);
+      test = test[0].match(/(?<=").*?(?=")/g);
+      // console.log(test[0]);
+      this.pageData.content = test[0];
+      console.log(this.pageData.content);
       this.userId = res.data.data.user.id;
+      //渲染评论列表；
       this.renderCommentLists();
     });
     // this.renderPage();

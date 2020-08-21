@@ -5,6 +5,7 @@
       <i class="iconfont iconjiantou2" @click="goback"></i>
     </header>
     <div class="follower-list">
+      <div class="no_content" v-if="friendsData.length == 0">フォロまだないよ～～</div>
       <followers
         v-for="(value, key) in friendsData"
         :key="key"
@@ -40,6 +41,7 @@ export default {
         url: "/user_follows",
       })
         .then((res) => {
+          console.log(res);
           const { data } = res.data;
           this.friendsData = data;
           console.log(this.friendsData);
@@ -72,6 +74,12 @@ export default {
       left: 4vw;
       transform: translateY(-50%);
     }
+  }
+  .no_content {
+    text-align: center;
+    font-weight: bold;
+    font-size: 22px;
+    margin: 5vw;
   }
 }
 </style>
