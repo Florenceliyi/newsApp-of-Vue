@@ -9,7 +9,7 @@
       <followers
         v-for="(value, key) in friendsData"
         :key="key"
-        :img="value.head_img"
+        :img="value.head_img | formartStr "
         :nickname="value.nickname"
         :date="value.create_date.split('T')[0]"
         :id="value.id"
@@ -31,6 +31,16 @@ export default {
       friendsData: {},
     };
   },
+  filters: {
+    // formartStr(value) {
+    //   const reg = /^http/;
+    //   if (reg.test(value)) {
+    //     return value;
+    //   } else {
+    //     return "http://127.0.0.1:3000" + value;
+    //   }
+    // },
+  },
   mounted() {
     //进来发送ajax请求渲染用户列表;
     this.renderPage();
@@ -43,6 +53,9 @@ export default {
         .then((res) => {
           console.log(res);
           const { data } = res.data;
+          // if (!/^http/.test(data.head_img)) {
+          //   data.head_img = this.$axios.defaults.baseURL + data.head_img;
+          // }
           this.friendsData = data;
           console.log(this.friendsData);
         })

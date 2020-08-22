@@ -9,7 +9,7 @@
             tag="img"
             v-if="headImg"
             class="cat"
-            :src="$axios.defaults.baseURL+headImg"
+            :src="headImg | formartStr"
             alt
           ></router-link>
           <router-link
@@ -69,6 +69,16 @@ export default {
       //编辑资料的弹出框显示;
       show: false,
     };
+  },
+  filters: {
+    formartStr(value) {
+      const reg = /^http/;
+      if (reg.test(value)) {
+        return value;
+      } else {
+        return "http://127.0.0.1:3000" + value;
+      }
+    },
   },
   mounted() {
     //页面一加载需要渲染页面信息;
@@ -169,6 +179,7 @@ export default {
         overflow: hidden;
         margin-left: 9vw;
         .cat {
+          display: block;
           width: 30vw;
           height: 30vw;
           object-fit: cover;

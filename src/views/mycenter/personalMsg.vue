@@ -9,7 +9,7 @@
         <div class="profile">
           <van-uploader :after-read="afterRead" />
           <div class="image">
-            <img class="cat" :src="srcImg" alt v-if="srcImg" />
+            <img class="cat" :src="srcImg | formartStr" alt v-if="srcImg" />
           </div>
         </div>
       </div>
@@ -42,6 +42,16 @@ export default {
     littleComs,
     EditPopUp,
   },
+  filters: {
+    formartStr(value) {
+      const reg = /^http/;
+      if (reg.test(value)) {
+        return value;
+      } else {
+        return "http://127.0.0.1:3000" + value;
+      }
+    },
+  },
   mounted() {
     this.renderPage();
   },
@@ -57,7 +67,7 @@ export default {
           //渲染数据到页面；
           const { data } = res.data;
           console.log(data);
-          this.srcImg = "http://127.0.0.1:3000" + data.head_img;
+          this.srcImg = data.head_img;
           this.userData = data;
         })
         .catch((err) => console.log(err));
