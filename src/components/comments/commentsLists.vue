@@ -16,16 +16,12 @@
         <div class="all">
           <div class="profile">
             <div>
-              <img src="../../assets/images/bobo.jpg" alt />
+              <img :src="item.user.head_img | formartStr" alt />
             </div>
           </div>
           <div class="middle">
             <p class="name">{{item.user.nickname}}</p>
-            <p class="time">
-              {{ item.create_date.split("T")[0] +
-              " " +
-              item.create_date.split("T")[1].split(".")[0]}}
-            </p>
+            <p class="time">{{ item.create_date.split("T")[0]}}</p>
           </div>
           <!-- 需要阻止事件冒泡 -->
           <button class="huifu" @click.stop="writeComments(item.id,item.user.nickname)">返事</button>
@@ -48,6 +44,16 @@ import replyComs from "./replyComs";
 export default {
   components: {
     replyComs,
+  },
+  filters: {
+    formartStr(value) {
+      const reg = /^http/;
+      if (reg.test(value)) {
+        return value;
+      } else {
+        return "http://itluoshuai.cn:3000" + value;
+      }
+    },
   },
   data() {
     return {
@@ -131,6 +137,7 @@ export default {
     .all {
       display: flex;
       justify-content: left;
+      position: relative;
       .name {
         font-weight: bold;
       }
@@ -158,9 +165,10 @@ export default {
       }
     }
     .huifu {
+      position: absolute;
       font-size: 14px;
-      margin-left: 45vw;
-      margin-top: 3vw;
+      right: 4vw;
+      top: 2vw;
     }
   }
 }

@@ -54,11 +54,7 @@ export default {
     timeFormate() {
       const currentTime = this.commentLists.create_date;
 
-      return (
-        currentTime.split("T")[0] +
-        " " +
-        currentTime.split("T")[1].split(".")[0]
-      );
+      return currentTime.split("T")[0];
     },
   },
   methods: {
@@ -82,6 +78,7 @@ export default {
   margin-top: 5vw;
   .info {
     display: flex;
+    position: relative;
     .user {
       margin-right: 2vw;
       span {
@@ -95,7 +92,9 @@ export default {
     }
   }
   .btnReply {
-    margin-left: 10vw;
+    position: absolute;
+    right: 3vw;
+    top: 2vw;
     color: #000;
     width: 16vw;
   }
