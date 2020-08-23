@@ -48,7 +48,7 @@ export default {
       if (reg.test(value)) {
         return value;
       } else {
-        return "http://127.0.0.1:3000" + value;
+        return "http://itluoshuai.cn:3000" + value;
       }
     },
   },
@@ -114,7 +114,7 @@ export default {
       }
       sendReq().then((res) => {
         console.log(res);
-        this.srcImg = "http://127.0.0.1:3000" + res.data.data.head_img;
+        this.srcImg = "http://itluoshuai.cn:3000" + res.data.data.head_img;
         this.renderPage();
       });
 

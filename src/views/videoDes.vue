@@ -279,7 +279,6 @@ export default {
 <style scoped lang='scss'>
 .news-detail {
   width: 100vw;
-  height: 100%;
   padding: 0 3vw;
   background: url("../assets/images/webp.jpg") left bottom;
   .header {
@@ -303,6 +302,8 @@ export default {
     position: relative;
     video {
       width: 100%;
+      max-height: 100vw;
+      object-fit: cover;
     }
     span {
       position: absolute;

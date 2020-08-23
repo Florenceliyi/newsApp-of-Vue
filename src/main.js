@@ -23,7 +23,8 @@ Vue.prototype.$axios = axios;
 
 
 //axios基准地址
-axios.defaults.baseURL = 'http://127.0.0.1:3000';
+// axios.defaults.baseURL = 'http://127.0.0.1:3000';
+axios.defaults.baseURL = 'http://itluoshuai.cn:3000';
 
 // 创建一个修复图片地址的全局过滤器
 Vue.filter('fixImgUrl', function (url) {

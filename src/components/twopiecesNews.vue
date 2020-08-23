@@ -20,7 +20,7 @@ export default {
       if (reg.test(value)) {
         return value;
       } else {
-        return "http://127.0.0.1:3000" + value;
+        return "http://itluoshuai.cn:3000" + value;
       }
     },
   },

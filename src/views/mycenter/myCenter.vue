@@ -76,7 +76,7 @@ export default {
       if (reg.test(value)) {
         return value;
       } else {
-        return "http://127.0.0.1:3000" + value;
+        return "http://itluoshuai.cn:3000" + value;
       }
     },
   },
@@ -131,15 +131,16 @@ export default {
       this.$axios({
         //JWT标准 json web token
         url: "/user/" + localStorage.getItem("id"),
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("Authorization"),
-        },
+        // headers: {
+        //   Authorization: "Bearer " + localStorage.getItem("Authorization"),
+        // },
       })
         .then((res) => {
           //获取成功渲染数据到页面;
           if (res.status == 200) {
             this.username = res.data.data.username;
             this.headImg = res.data.data.head_img;
+            console.log(this.head_img);
             //取出T前的日期
             this.date = res.data.data.create_date.split("T")[0];
           }

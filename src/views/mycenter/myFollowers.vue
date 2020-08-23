@@ -32,14 +32,14 @@ export default {
     };
   },
   filters: {
-    // formartStr(value) {
-    //   const reg = /^http/;
-    //   if (reg.test(value)) {
-    //     return value;
-    //   } else {
-    //     return "http://127.0.0.1:3000" + value;
-    //   }
-    // },
+    formartStr(value) {
+      const reg = /^http/;
+      if (reg.test(value)) {
+        return value;
+      } else {
+        return "http://itluoshuai.cn:3000" + value;
+      }
+    },
   },
   mounted() {
     //进来发送ajax请求渲染用户列表;
