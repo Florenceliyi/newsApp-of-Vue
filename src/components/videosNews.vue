@@ -11,7 +11,7 @@
       <img :src="item.cover[0].url | formartStr" alt />
       <div class="source">
         <span>{{item.user.nickname}}</span>
-        <span>{{item.commont_length}}</span>
+        <span>跟帖 {{item.comment_length}}</span>
       </div>
     </div>
   </div>

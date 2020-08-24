@@ -136,7 +136,6 @@ export default {
 <style scoped lang='scss'>
 .moreComments {
   width: 100vw;
-  height: 100%;
   background: url("../assets/images/webp.jpg") left bottom;
   header {
     position: relative;
@@ -177,7 +176,7 @@ export default {
     }
     button {
       margin-left: 10vw;
-      width: 12vw;
+      width: 20vw;
       height: 8vw;
       border-radius: 8px;
       background: #f97979;

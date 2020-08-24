@@ -1,7 +1,7 @@
 <template id='register'>
   <div class="login">
     <header>
-      <a href="javascript:void(0)" class="close"></a>
+      <a href="/#/login" class="close"></a>
     </header>
     <transition
       appear

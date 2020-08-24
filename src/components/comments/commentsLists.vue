@@ -12,28 +12,30 @@
     <!-- 有回复时的结构 -->
     <div class="main_comments">
       <!-- 评论结构 -->
-      <div class="reply" v-for="(item, index) in lists" :key="index">
-        <div class="all">
-          <div class="profile">
-            <div>
-              <img :src="item.user.head_img | formartStr" alt />
+      <div class="wrapper" v-for="(item, index) in lists" :key="index">
+        <div class="reply">
+          <div class="all">
+            <div class="profile">
+              <div>
+                <img :src="item.user.head_img | formartStr" alt />
+              </div>
             </div>
+            <div class="middle">
+              <p class="name">{{item.user.nickname}}</p>
+              <p class="time">{{ item.create_date.split("T")[0]}}</p>
+            </div>
+            <!-- 需要阻止事件冒泡 -->
+            <button class="huifu" @click.stop="writeComments(item.id,item.user.nickname)">返事</button>
           </div>
-          <div class="middle">
-            <p class="name">{{item.user.nickname}}</p>
-            <p class="time">{{ item.create_date.split("T")[0]}}</p>
-          </div>
-          <!-- 需要阻止事件冒泡 -->
-          <button class="huifu" @click.stop="writeComments(item.id,item.user.nickname)">返事</button>
+          <div class="content">{{item.content}}</div>
+          <!-- 回复的子组件 -->
+          <replyComs
+            :commentLists="item.parent"
+            v-if="item.parent"
+            :writeCommits="writeCommits"
+            @writeComments="writeComments"
+          ></replyComs>
         </div>
-        <div class="content">{{item.content}}</div>
-        <!-- 回复的子组件 -->
-        <replyComs
-          :commentLists="item.parent"
-          v-if="item.parent"
-          :writeCommits="writeCommits"
-          @writeComments="writeComments"
-        ></replyComs>
       </div>
     </div>
   </div>

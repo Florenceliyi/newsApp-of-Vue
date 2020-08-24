@@ -1,7 +1,7 @@
 <template>
   <div class="followers">
     <div class="friends">
-      <img v-if="img" :src="this.$axios.defaults.baseURL + img" alt />
+      <img v-if="img" :src=" img" alt />
     </div>
     <div class="title">
       <p>{{nickname}}</p>
@@ -61,7 +61,9 @@ export default {
     overflow: hidden;
     margin-right: 3vw;
     img {
-      width: 100%;
+      width: 15vw;
+      height: 15vw;
+      object-fit: cover;
     }
   }
   .title {

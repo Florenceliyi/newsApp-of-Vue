@@ -6,15 +6,15 @@
     </header>
     <div class="follower-list">
       <div class="no_content" v-if="friendsData.length == 0">フォロまだないよ～～</div>
-      <followers
-        v-for="(value, key) in friendsData"
-        :key="key"
-        :img="value.head_img | formartStr "
-        :nickname="value.nickname"
-        :date="value.create_date.split('T')[0]"
-        :id="value.id"
-        @isClicked="renderPage"
-      ></followers>
+        <followers
+          v-for="(value, key) in friendsData"
+          :key="key"
+          :img="value.head_img | formartStr "
+          :nickname="value.nickname"
+          :date="value.create_date.split('T')[0]"
+          :id="value.id"
+          @isClicked="renderPage"
+        ></followers>
     </div>
   </div>
 </template>

@@ -54,6 +54,7 @@
       @sendShowInput="handlerInput"
       :parentId="parentId"
       @reRender="renderCommentLists"
+      :has_star="has_star"
     ></commentsFooter>
   </div>
 </template>
@@ -79,6 +80,8 @@ export default {
       isPopUp: true,
       //回复评论id
       parentId: 0,
+      //有无关注的标识;
+      has_star: false,
     };
   },
   components: {
@@ -103,6 +106,7 @@ export default {
       this.pageData.content = test[0];
       console.log(this.pageData.content);
       this.userId = res.data.data.user.id;
+      this.has_star = res.data.data.has_star;
       //渲染评论列表；
       this.renderCommentLists();
     });
@@ -114,24 +118,22 @@ export default {
       this.$router.back();
     },
     //发送收藏的ajax请求
-    getCollected(hasFollowed) {
-      console.log(hasFollowed);
+    getCollected(flag) {
+      console.log("现在文章耳的收场专题：" + flag);
       //若是有token则发送收藏请求，没有提示请先登录;
       if (localStorage.getItem("Authorization")) {
-        //判断是取消收藏还是收藏的请求；
-        if (hasFollowed) {
-          //没有关注时；
-          this.$axios({
-            url: "/post_star/" + this.videoId,
-          })
-            .then((res) => {
-              console.log(res);
-              this.$toast("关注成功");
-            })
-            .catch((err) => console.log(err));
-        } else {
-          this.sendFollowData();
-        }
+        this.$axios({
+          url: "/post_star/" + this.videoId,
+        }).then((res) => {
+          if (res.data.message == "收藏成功") {
+            console.log("收藏成功");
+            this.has_star = true;
+          } else if (res.data.message == "取消成功") {
+            console.log("取消收藏");
+            this.has_star = false;
+          }
+          // this.$toast("收藏成功");
+        });
       } else {
         this.$dialog
           .alert({
@@ -254,7 +256,13 @@ export default {
       })
         .then((res) => {
           console.log(res.data.data);
-          this.lists = res.data.data;
+          //只渲染3条数据;
+          res.data.data.forEach((data, index) => {
+            if (index <= 2) {
+              this.lists.push(data);
+            }
+          });
+
           console.log(this.lists);
         })
         .catch((err) => console.log(err));
@@ -362,7 +370,7 @@ export default {
 
   .icons {
     margin-top: 5vw;
-    width: 100vw;
+    width: 100%;
     height: 14vw;
     a {
       width: 22vw;

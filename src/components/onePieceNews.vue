@@ -8,7 +8,7 @@
     </div>
     <p class="des">
       <span>{{item.user.nickname}}</span>
-      <span>{{item.comment_length}}</span>
+      <span>跟帖 {{item.comment_length}}</span>
     </p>
   </div>
 </template>

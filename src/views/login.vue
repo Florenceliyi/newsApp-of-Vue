@@ -1,7 +1,7 @@
 <template id='login'>
   <div class="login">
     <header>
-      <a href="javascript:void(0)" class="close"></a>
+      <a href="/#/home" class="close"></a>
     </header>
     <div class="logo">
       <img src="../assets/images/webp.jpg" alt />
@@ -14,6 +14,7 @@
         :placeholder="'ユーザー名／番号'"
         @inputData="getUserName"
         :rules="/[0-9a-zA-Z]/"
+        @isEmpty="isEmpty"
       ></inputDom>
       <inputDom
         :type="'password'"
@@ -51,6 +52,19 @@ export default {
       },
     };
   },
+  watch: {
+    objData: {
+      handler: function (val) {
+        //val返回一个监听所有objData属性中的对象;
+        console.log(val);
+        if (val.username == "") {
+        } else if (val.password == "") {
+        }
+      },
+      /* deep属性可以监听多重嵌套的数据 */
+      deep: true,
+    },
+  },
   props: ["parentData"],
   methods: {
     getUserName(userName) {
@@ -72,14 +86,10 @@ export default {
         .then((res) => {
           console.log(res.data);
           if (res.data.message == "登录成功") {
-            this.$dialog
-              .alert({
-                message: res.data.message,
-                theme: "round-button",
-              })
-              .then(() => {
-                // on close
-              });
+            this.$dialog.alert({
+              message: res.data.message,
+              theme: "round-button",
+            });
             //可以用解构赋值语法简化：const {token, id} = res.data
 
             localStorage.setItem("Authorization", res.data.data.token);
@@ -100,6 +110,16 @@ export default {
           }
         })
         .catch((err) => console.log(err));
+    },
+    isEmpty(isEmpty) {
+      this.$dialog
+        .alert({
+          message: "ユーザー名あるいはパスワードは空じゃだめよ～",
+          theme: "round-button",
+        })
+        .then((res) => {
+          console.log(res);
+        });
     },
   },
 

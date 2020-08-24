@@ -6,7 +6,7 @@
     </div>
     <div class="source">
       <span>{{item.user.nickname}}</span>
-      <span>{{item.commont_length}}</span>
+      <span>跟帖 {{item.comment_length}}</span>
     </div>
   </div>
 </template>

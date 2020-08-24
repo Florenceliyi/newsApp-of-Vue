@@ -16,7 +16,7 @@
       <div class="personal-msg">
         <littleComs content="昵称" :detail="userData.nickname"></littleComs>
         <littleComs content="用户名" :detail="userData.username"></littleComs>
-        <littleComs content="密码" :detail="userData.password"></littleComs>
+        <littleComs content="密码" detail="******"></littleComs>
         <littleComs content="性别" :detail="userData.gender==1?'男':'女'"></littleComs>
       </div>
       <div class="button" @click="edit">修改信息</div>
@@ -84,6 +84,8 @@ export default {
     },
     //获取当前子组件传入的组件是否显示的状态；
     getConditions(condition) {
+      //再次渲染页面;
+      this.renderPage();
       this.isShow = condition;
     },
     //上传文件；

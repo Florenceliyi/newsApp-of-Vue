@@ -34,6 +34,7 @@ export default {
     judge() {
       //输入框为空时
       if (this.inputVal == "") {
+        this.$emit("isEmpty", true);
         return;
       }
       //验证用户输入的正则表达

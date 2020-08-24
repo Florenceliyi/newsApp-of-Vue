@@ -17,13 +17,13 @@
     </div>
     <div class="footer-icons" v-show="!isWrittingNow">
       <i class="iconfont iconpinglun-">
-        <b>4</b>
+        <b>{{comments_len}}</b>
       </i>
       <span
         class="star"
         @click.stop="isClicked"
-        v-text="flag?'★':'☆'"
-        :class="flag?' collected':''"
+        v-text="has_star?'★':'☆'"
+        :class="has_star?'collected':''"
       ></span>
       <i class="iconfont iconfenxiang" @click.stop></i>
     </div>
@@ -35,12 +35,13 @@ import { log } from "util";
 export default {
   data() {
     return {
-      //是否关注标识;
-      flag: false,
       inputVal: "",
+      //评论条数;
+      comments_len: 0,
     };
   },
-  props: ["isWrittingNow", "parentId"],
+  props: ["isWrittingNow", "parentId", "has_star"],
+
   directives: {
     focus: {
       // 这里的el就是被绑定指令的那个元素
@@ -49,12 +50,19 @@ export default {
       },
     },
   },
-  mounted() {},
+  mounted() {
+    //渲染评论条数
+    this.$axios({
+      url: "/post_comment/" + this.$route.query.id,
+    }).then((res) => {
+      this.comments_len = res.data.data.length;
+    });
+  },
+
   methods: {
     isClicked() {
-      this.flag = !this.flag;
-      //告诉父组件收藏按钮被点击了;
-      this.$emit("sendClick", this.flag);
+      //父组件传过来的参数
+      this.$emit("sendClick", this.has_star);
       //修改图标颜色变黄；
     },
     clickEmit() {
@@ -68,11 +76,7 @@ export default {
       //获取焦点，发送按钮显示
       this.isShow = !this.isWrittingNow;
     },
-    // onBlur() {
-    //   //与获取焦点的判断相反；
-    //   this.styleChange = true;
-    //   this.isShow = false;
-    // },
+
     sendCommits() {
       //子组件传递鼠标点击事件给父组件;
       this.$emit("sendSonClick");
@@ -118,9 +122,9 @@ export default {
 
 <style scoped lang='scss'>
 .footer {
-  width: 100%;
+  width: 100vw;
   height: 15vw;
-  padding: 0 3vw;
+  // padding: 0 3vw;
   display: flex;
   align-items: center;
   position: fixed;
@@ -193,6 +197,9 @@ export default {
       margin: 0 4vw;
     }
     .collected {
+      color: yellow;
+    }
+    .active {
       color: yellow;
     }
   }

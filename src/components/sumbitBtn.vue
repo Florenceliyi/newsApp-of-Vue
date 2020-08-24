@@ -9,10 +9,24 @@ export default {
   props: ["href", "btnName", "userName", "password", "userNickName"],
   methods: {
     sendData() {
+      if (this.userName == "" || this.password == "") {
+        console.log("hihihihi");
+        // this.$dialog
+        //   .alert({
+        //     message: "ユーザー名あるいはパスワードは空じゃだめよ～",
+        //     theme: "round-button",
+        //   })
+        //   .then((res) => {
+        //     console.log(res);
+        //   });
+        this.$toast.fail("入力は空じゃだめよ～");
+        return;
+      }
       this.$emit("isClicked");
     },
     // sendClick() {
     //   console.log(this.userName, this.password, this.userNickName);
+
     // },
   },
 };
