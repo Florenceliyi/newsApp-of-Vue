@@ -246,6 +246,7 @@ export default {
 .news-detail {
   position: relative;
   width: 100vw;
+  min-height: 200vw;
   padding: 0 3vw;
   background: url("../assets/images/webp.jpg") left bottom;
   .header {
@@ -267,7 +268,7 @@ export default {
       position: absolute;
       display: block;
       right: 4vw;
-      width: 14vw;
+      width: 21vw;
       height: 10vw;
       line-height: 10vw;
       text-align: center;

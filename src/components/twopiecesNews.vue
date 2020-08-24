@@ -47,6 +47,7 @@ export default {
     img {
       width: 30vw;
       height: 14vh;
+      object-fit: cover;
       margin-right: 1vw;
       margin-bottom: 2vh;
     }

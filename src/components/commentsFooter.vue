@@ -130,7 +130,7 @@ export default {
   position: fixed;
   left: 0;
   bottom: 0;
-  background: #fff;
+  background: #ec7c70;
   &.focus_style {
     height: 32vw;
     .footer-commit {
@@ -149,7 +149,7 @@ export default {
     flex: 1;
     width: 50vw;
     height: 12vw;
-    background: #d7d7d7;
+    background: #fff;
     padding-left: 3vw;
     border-radius: 15px;
     padding-top: 3vw;

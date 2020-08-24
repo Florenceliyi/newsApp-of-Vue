@@ -53,6 +53,7 @@ export default {
       img {
         width: 30vw;
         height: 14vh;
+        object-fit: cover;
       }
     }
   }

@@ -287,6 +287,7 @@ export default {
 <style scoped lang='scss'>
 .news-detail {
   width: 100vw;
+  min-height: 200vw;
   padding: 0 3vw;
   background: url("../assets/images/webp.jpg") left bottom;
   .header {
