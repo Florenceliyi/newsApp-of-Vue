@@ -43,6 +43,9 @@ export default {
   padding: 3vh 0 4vh 3vw;
   background: #ffebed;
   border-bottom: 1px solid #ccc;
+  p {
+    width: 100%;
+  }
   .news {
     display: flex;
     .title {

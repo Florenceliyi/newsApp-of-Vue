@@ -69,7 +69,7 @@ export default {
       //子组件按钮点击，弹窗弹起标识；
       isPopUp: true,
       //回复评论id
-      parentId: 0,
+      parentId: undefined,
       has_star: false,
     };
   },
@@ -200,27 +200,35 @@ export default {
     },
     //点击文章详情页面，下面的子组件会恢复样式;
     getClick() {
-      console.log("父组件被点击了");
+      this.parentId = undefined;
+      // console.log("父组件被点击了");
       this.writeCommits = false;
+      console.log("点击发送按钮发送消息，重新渲染评论列表");
+      console.log("现在的lists数据：");
+      console.log(this.lists);
+      // this.renderCommentLists();
     },
     clickComents() {
       //子组件传递一个事件给父组件，父组件接收事件，在父组件中修改值，再传回给子组件；
       //原因：父组件传给子组件的值，不能在子组件中直接修改；
-      console.log("子组件被点击了");
+      // console.log("子组件被点击了");
       this.writeCommits = true;
     },
     //渲染文章评论列表的方法;
     renderCommentLists() {
-      this.$axios({
-        url: "/post_comment/" + this.newsId,
-      })
+      this.$axios({ url: "/post_comment/" + this.newsId })
         .then((res) => {
+          console.log("发送评论请求返回的数据res:");
           console.log(res.data.data);
+          console.log("处理前的lists:");
+          console.log(this.lists);
+          this.lists = [];
           res.data.data.forEach((data, index) => {
             if (index <= 2) {
               this.lists.push(data);
             }
           });
+          console.log("处理后的当前品论列表：");
           console.log(this.lists);
         })
         .catch((err) => console.log(err));
@@ -234,9 +242,10 @@ export default {
     showStyle(show, parentId) {
       //传回给底部条子组件;
       this.writeCommits = show;
-      console.log("writeCommits:" + this.writeCommits);
+      // console.log("writeCommits:" + this.writeCommits);
       //保存回复子组件传递过来的用户Id
       this.parentId = parentId;
+      console.log("现在回复的用户ID：" + this.parentId);
     },
   },
 };
@@ -299,6 +308,10 @@ export default {
     ::v-deep img {
       width: 100%;
       margin-bottom: 2vw;
+    }
+    ::v-deep p {
+      width: 100%;
+      word-break: break-all;
     }
   }
   .icons {

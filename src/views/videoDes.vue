@@ -234,7 +234,7 @@ export default {
     },
     //点击文章详情页面，下面的子组件会恢复样式;
     getClick() {
-      console.log("父组件被点击了");
+      // console.log("父组件被点击了");
       this.writeCommits = false;
     },
     clickComents() {

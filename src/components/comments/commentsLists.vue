@@ -73,7 +73,8 @@ export default {
     //子组件回复按钮点击，触发传递给父组件;
     writeComments(userId, nickname) {
       //样式取反
-      this.isShow = !this.writeCommits;
+      this.isShow = true;
+      // this.isShow = !this.writeCommits;
       //子组件传递样式改变的变量给父组件;
       this.$emit("writeComments", this.isShow, userId, nickname);
 
@@ -143,11 +144,6 @@ export default {
       .name {
         font-weight: bold;
       }
-
-      button {
-        width: 10vw;
-        height: 6vw;
-      }
     }
     .profile {
       div {
@@ -171,6 +167,14 @@ export default {
       font-size: 14px;
       right: 4vw;
       top: 2vw;
+      color: #000;
+      width: 12vw;
+      height: 12vw;
+      line-height: 12vw;
+      text-align: center;
+      // border: 1px solid orangered;
+      border-radius: 15px;
+      background: #f97979;
     }
   }
 }

@@ -82,21 +82,25 @@ export default {
     .user {
       margin-right: 2vw;
       span {
-        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         color: #000;
       }
-    }
-    button {
-      width: 10vw;
-      height: 6vw;
     }
   }
   .btnReply {
     position: absolute;
-    right: 3vw;
-    top: 2vw;
+    right: -2vw;
+    top: 0vw;
     color: #000;
-    width: 16vw;
+    width: 11vw;
+    height: 11vw;
+    line-height: 11vw;
+    text-align: center;
+    border-radius: 15px;
+    background: #f97979;
+    font-size: 12px;
   }
 }
 </style>

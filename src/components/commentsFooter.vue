@@ -66,7 +66,8 @@ export default {
       //修改图标颜色变黄；
     },
     clickEmit() {
-      console.log("向父组件传递自定义事件：" + this.isWrittingNow);
+      console.log("当前回复的用户id:" + this.parentId);
+      // console.log("向父组件传递自定义事件：" + this.isWrittingNow);
       this.$emit("sendShowInput", this.isWrittingNow);
     },
 
@@ -78,23 +79,23 @@ export default {
     },
 
     sendCommits() {
-      //子组件传递鼠标点击事件给父组件;
-      this.$emit("sendSonClick");
       //子组件接收到父组件传递的事件，改变输入框的样式;
 
-      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!注意父组件传递过来的值不可以直接改写！！！！！；
       // this.isWrittingNow = false;
-      console.log(this.isWrittingNow);
+      // console.log(this.isWrittingNow);
       if (!this.isWrittingNow) {
         this.styleChange = !this.isWrittingNow;
         this.isShow = this.isWrittingNow;
       }
       //判断data是否有parentId；
-      console.log(this.parentId);
+      // console.log(this.parentId);
       let data = { content: this.inputVal };
+      data.parent_id = null;
       if (this.parentId) {
         data.parent_id = this.parentId;
       }
+      console.log("回复的data数据：");
+      console.log(data);
       //发布评论的ajax请求;
       this.$axios({
         url: "/post_comment/" + this.$route.query.id,
@@ -105,11 +106,14 @@ export default {
         .then((res) => {
           console.log(res);
           //发布成功后清空输入框;
-          this.inputVal = "";
           //通知父组件需要重新渲染页面;
+          // this.$emit("reRender");
+          //子组件传递鼠标点击事件给父组件;
+          this.$emit("sendSonClick");
           this.$emit("reRender");
         })
         .catch((err) => console.log(err));
+      this.inputVal = "";
     },
 
     handlerEmit() {
