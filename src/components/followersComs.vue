@@ -18,18 +18,6 @@ export default {
   props: ["img", "nickname", "date", "id"],
 
   methods: {
-    //渲染用户列表的方法：
-    // renderPage() {
-    //   this.$axios({
-    //     url: "/user_follows",
-    //   })
-    //     .then((res) => {
-    //       const { data } = res.data;
-    //       this.friendsData = data;
-    //       console.log(this.friendsData);
-    //     })
-    //     .catch((err) => console.log(err));
-    // },
     delFriend() {
       this.$axios({
         url: "/user_unfollow/" + this.id,
