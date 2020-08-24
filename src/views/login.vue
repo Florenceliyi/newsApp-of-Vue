@@ -3,9 +3,15 @@
     <header>
       <a href="/#/home" class="close"></a>
     </header>
-    <div class="logo">
-      <img src="../assets/images/webp.jpg" alt />
-    </div>
+    <transition
+      appear
+      mode="out-in"
+      enter-active-class="animate__animated animate__lightSpeedInLeft"
+    >
+      <div class="logo">
+        <img src="../assets/images/webp.jpg" alt />
+      </div>
+    </transition>
     <form action>
       <!-- <input type="text" placeholder="番号？" />
       <input type="password" placeholder="パスワード？" />-->
