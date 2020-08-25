@@ -79,7 +79,7 @@ export default {
       //子组件按钮点击，弹窗弹起标识；
       isPopUp: true,
       //回复评论id
-      parentId: 0,
+      parentId: undefined,
       //有无关注的标识;
       has_star: false,
     };
@@ -234,8 +234,12 @@ export default {
     },
     //点击文章详情页面，下面的子组件会恢复样式;
     getClick() {
+      this.parentId = undefined;
       // console.log("父组件被点击了");
       this.writeCommits = false;
+      console.log("点击发送按钮发送消息，重新渲染评论列表");
+      console.log("现在的lists数据：");
+      console.log(this.lists);
     },
     clickComents() {
       //子组件传递一个事件给父组件，父组件接收事件，在父组件中修改值，再传回给子组件；
@@ -256,6 +260,8 @@ export default {
       })
         .then((res) => {
           console.log(res.data.data);
+          //放入数据前先清空一下存放数据的数组；
+          this.lists = [];
           //只渲染3条数据;
           res.data.data.forEach((data, index) => {
             if (index <= 2) {

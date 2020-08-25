@@ -222,6 +222,7 @@ export default {
           console.log(res.data.data);
           console.log("处理前的lists:");
           console.log(this.lists);
+          //放入数据前先清空一下存放数据的数组；
           this.lists = [];
           res.data.data.forEach((data, index) => {
             if (index <= 2) {
