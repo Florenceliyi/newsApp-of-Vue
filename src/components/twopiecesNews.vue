@@ -1,5 +1,9 @@
 <template id='twopiecesNews'  >
-  <div class="news-content" @click="goToNesDes" v-if="item.type ==1 && item.cover.length == 3">
+  <div
+    class="news-content"
+    @click="goToNesDes"
+    v-if="item.type ==1 && item.cover.length >=2 && item.cover.length <=3"
+  >
     <div class="title">{{item.title}}</div>
     <div class="images">
       <img v-for="(value, key) in item.cover" :key="key" :src="value.url | formartStr" alt />

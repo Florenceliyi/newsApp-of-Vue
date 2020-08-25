@@ -1,5 +1,8 @@
 <template >
-  <div class="news-content" v-if="item.type == 2 && item.cover.length ==1 && item.cover[0].url">
+  <div
+    class="news-content"
+    v-if="item.type == 2 && item.cover.length >=1 &&  item.cover.length <=3 && item.cover[0].url"
+  >
     <div class="videos">
       <div class="mask" v-show="isShow" @click="clicked">
         <div class="play">
