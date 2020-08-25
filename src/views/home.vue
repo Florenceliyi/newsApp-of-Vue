@@ -113,8 +113,15 @@ export default {
     renderArticles() {
       //2222222222222222.首先获取对应栏目的文章数据;
       const currentCategory = this.categoryLists[this.tabIndex];
-      console.log(currentCategory);
-
+      console.log(
+        "------------------------发送请求获取文章数据-------------------------"
+      );
+      console.log(
+        "params参数：",
+        currentCategory.pageIndex,
+        this.getActiveId,
+        "当前类别加载文章数：" + currentCategory.pageSize
+      );
       this.$axios({
         url: "/post",
         params: {
@@ -147,8 +154,8 @@ export default {
     renderTabLists() {
       //进来加载栏目列表信息,若是有本地栏目数据，则加载本地栏目数据;
       if (localStorage.getItem("ownedChannels")) {
+        console.log("有本地数据，从本地拿取");
         //制造res.data.data的响应返回的数据形式;
-        console.log(JSON.parse(localStorage.getItem("ownedChannels")));
         const res = {
           data: {
             data: JSON.parse(localStorage.getItem("ownedChannels")),
@@ -162,15 +169,16 @@ export default {
             ...item,
             postList: [],
             pageIndex: 1,
-            pageSize: 4,
+            pageSize: 10,
             loading: false,
             finished: false,
           };
         });
         this.categoryLists = newLoadingData;
-        console.log(this.categoryLists);
+        // console.log(this.categoryLists);
         this.renderArticles();
       } else {
+        console.log("本地没有数据，重新加载");
         this.$axios({
           url: "/category",
         }).then((res) => {
@@ -196,7 +204,6 @@ export default {
       }
     },
     getMorePages() {
-      //333333333333333333.1    首先获取当前栏目对应的数据;
       //由于需要将页码设置多加1，需要拿到当前栏目的类别对象；
       const currentCategory = this.categoryLists[this.tabIndex];
       currentCategory.pageIndex += 1;
